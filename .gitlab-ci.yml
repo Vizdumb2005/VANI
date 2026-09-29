@@ -1,0 +1,123 @@
+# GitLab CI/CD Pipeline for VAANI (Voice-to-Network Aggregated National Intelligence)
+# Digital Public Good (DPG) & Google Build with AI India Hackathon
+
+stages:
+  - lint
+  - test
+  - audit
+  - build
+  - deploy
+
+default:
+  image: python:3.11-slim
+  before_script:
+    - python -V
+    - pip install --upgrade pip
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  key: "$CI_COMMIT_REF_SLUG"
+  paths:
+    - .cache/pip
+    - .pytest_cache
+
+# --- Stage 1: Lint & Schema Validation ---
+lint:openapi-and-schema:
+  stage: lint
+  script:
+    - pip install pyyaml openapi-spec-validator
+    - python -c "import yaml; from openapi_spec_validator import validate; spec = yaml.safe_load(open('api/openapi.yaml', encoding='utf-8')); validate(spec); print('OpenAPI 3.1.0 Validation: PASSED')"
+
+lint:syntax-and-sanity:
+  stage: lint
+  script:
+    - python -m py_compile workflow/*.py app/*.py tests/*.py
+    - echo "Python syntax compilation passed cleanly."
+
+# --- Stage 2: Automated Testing Suite (P1-P16) ---
+test:pipeline:
+  stage: test
+  script:
+    - pip install -r requirements.txt
+    - python -m pytest tests/test_vaani_pipeline.py -v --junitxml=report.xml --cov=workflow --cov=app --cov-report=xml:coverage.xml --cov-report=term
+  artifacts:
+    when: always
+    reports:
+      junit: report.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+    paths:
+      - report.xml
+      - coverage.xml
+    expire_in: 30 days
+  coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
+
+# --- Stage 3: Privacy & Statutory Compliance Audit ---
+audit:privacy-and-compliance:
+  stage: audit
+  script:
+    - pip install -r requirements.txt
+    - python workflow/m7_privacy_audit.py
+    - grep -q "raw_phone_numbers_in_persisted_data: 0" results/privacy_audit.txt
+    - grep -q "retained_audio_files: 0" results/privacy_audit.txt
+    - echo "DPDP Act 2023 & NDGFP Data Minimization Invariants verified."
+
+# --- Stage 4: Container Build (GitLab Container Registry) ---
+build:container:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:v1.20.0-debug
+    entrypoint: [""]
+  before_script:
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${CI_REGISTRY_USER}" "${CI_REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+  script:
+    - /kaniko/executor
+      --context "${CI_PROJECT_DIR}"
+      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
+      --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}"
+      --destination "${CI_REGISTRY_IMAGE}:latest"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "master"'
+      when: on_success
+    - if: $CI_COMMIT_TAG
+      when: on_success
+    - when: manual
+      allow_failure: true
+
+# --- Stage 5: GitLab Pages Deployment (Free Public Hosting for Cockpit & Pitch Deck) ---
+pages:
+  stage: deploy
+  script:
+    - mkdir -p public
+    - cp -r dashboard/* public/
+    - cp -r results/*.png public/ 2>/dev/null || true
+    - cp -r docs/*.md public/ 2>/dev/null || true
+    - echo "VAANI Policy Cockpit & Pitch Deck published to GitLab Pages."
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "master"'
+
+# --- Stage 5b: Google Cloud Run Automated Deployment (Optional) ---
+deploy:cloud-run:
+  stage: deploy
+  image: google/cloud-sdk:alpine
+  before_script: []
+  script:
+    - echo "Deploying VAANI Sovereign DPI to Google Cloud Run..."
+    - echo "$GCP_SERVICE_KEY" | gcloud auth activate-service-account --key-file=-
+    - gcloud config set project "$GCP_PROJECT_ID"
+    - gcloud run deploy vaani-platform
+      --image "${CI_REGISTRY_IMAGE}:latest"
+      --region "${GCP_REGION:-asia-south1}"
+      --platform managed
+      --allow-unauthenticated
+  rules:
+    - if: '$GCP_SERVICE_KEY != null && $GCP_PROJECT_ID != null'
+      when: manual
+      allow_failure: true

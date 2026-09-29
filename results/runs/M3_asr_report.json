@@ -1,0 +1,15 @@
+{
+  "per_language_wer": {
+    "hi": 0.1373,
+    "ta": 0.1701,
+    "mr": 0.14
+  },
+  "overall_wer": 0.1498,
+  "n": 50,
+  "rung_exercised": "cached-simulated",
+  "ladder_status": {
+    "selfhosted-indicconformer": "requires GPU + NeMo (documented)",
+    "bhashini-ulca": "requires BHASHINI_API_KEY (documented)",
+    "cached-simulated": "exercised in this build"
+  }
+}

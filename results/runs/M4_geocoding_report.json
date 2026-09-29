@@ -1,0 +1,24 @@
+{
+  "test": {
+    "resolved_rate": 0.9316,
+    "district_accuracy_all": 0.9297,
+    "district_accuracy_of_resolved": 0.998,
+    "unresolved_rate": 0.0684,
+    "failure_taxonomy": {
+      "n_unresolved": 185,
+      "of_which_voice_channel_asr_loss": 185,
+      "of_which_no_place_name": 0
+    }
+  },
+  "train": {
+    "resolved_rate": 0.9257,
+    "district_accuracy_all": 0.9221,
+    "district_accuracy_of_resolved": 0.9961,
+    "unresolved_rate": 0.0743,
+    "failure_taxonomy": {
+      "n_unresolved": 448,
+      "of_which_voice_channel_asr_loss": 448,
+      "of_which_no_place_name": 0
+    }
+  }
+}

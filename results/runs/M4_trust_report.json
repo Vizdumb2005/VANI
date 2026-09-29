@@ -1,0 +1,18 @@
+{
+  "train": {
+    "n_flagged": 44,
+    "flagged_of_which_gt_spam": 44,
+    "legit_in_top_100_flagged": 0,
+    "mean_entropy_flagged": 4.527,
+    "max_velocity_legit": 1,
+    "flag_rate": 0.0073
+  },
+  "test": {
+    "n_flagged": 0,
+    "flagged_of_which_gt_spam": 0,
+    "legit_in_top_100_flagged": 0,
+    "mean_entropy_flagged": 0.0,
+    "max_velocity_legit": 1,
+    "flag_rate": 0.0
+  }
+}

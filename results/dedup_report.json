@@ -1,0 +1,38 @@
+{
+  "threshold": 0.65,
+  "similarity": "0.65 * token-overlap-coefficient + 0.35 * char-ngram cosine",
+  "labeling": "labeled duplicate set = transitive closure of (district, category, concept, village) within 45-day chains (self-consistent ground truth)",
+  "train_tuning": [
+    {
+      "threshold": 0.55,
+      "f1": 0.821,
+      "precision": 0.8474,
+      "recall": 0.7962
+    },
+    {
+      "threshold": 0.6,
+      "f1": 0.8272,
+      "precision": 0.8693,
+      "recall": 0.789
+    },
+    {
+      "threshold": 0.65,
+      "f1": 0.8332,
+      "precision": 0.8919,
+      "recall": 0.7818
+    },
+    {
+      "threshold": 0.7,
+      "f1": 0.8305,
+      "precision": 0.9079,
+      "recall": 0.7653
+    }
+  ],
+  "test": {
+    "pairwise_precision": 0.8791,
+    "pairwise_recall": 0.8905,
+    "pairwise_f1": 0.8848,
+    "n_pos_pairs": 11020,
+    "n_pred_pairs": 11162
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "web_text": {
+    "request_id": "35e597ff-f3f7-452d-9b5b-b330883c2959",
+    "language": "hi",
+    "transcript_preview": "रामपुर गाँव की सड़क बहुत टूटी है, वाराणसी में मानसून में कोई मरम्मत नहीं हुई। सड़क पर गड्ढे भरे हैं",
+    "asr_rung": "n/a (text channel)"
+  },
+  "whatsapp_text": {
+    "request_id": "55cc72d6-7e57-439f-a169-40d71ba1053a",
+    "language": "ta",
+    "transcript_preview": "எங்க கிராமத்து ரோடு மோசமா உடைந்து இருக்கு, சேலம் ல யாரும் சரி பண்ணல. ரோட்டுல குழிகள் நிறைய இருக்கு",
+    "asr_rung": "n/a (text channel)"
+  },
+  "web_voice": {
+    "request_id": "4c763b45-15b1-410e-86ac-c0ff012c48f5",
+    "language": "mr",
+    "transcript_preview": "पुणे मध्ये पिण्याचे पाणी मि ळत नाही, पुणे चे लोक त्र्त आहेत. हॅन्डपं प तीन महिन्यांपाून बिघडला आहे",
+    "asr_rung": "cached-simulated"
+  },
+  "whatsapp_voice": {
+    "request_id": "533ffc6d-8243-4df4-a383-1b8c1c329a4f",
+    "language": "ta",
+    "transcript_preview": "மதுரை ல தினமும் 6 மணி கரண் ட் கட் வருத",
+    "asr_rung": "cached-simulated"
+  }
+}

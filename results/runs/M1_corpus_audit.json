@@ -1,0 +1,39 @@
+{
+  "total_requests": 8735,
+  "train_requests": 6031,
+  "test_requests": 2704,
+  "per_language_total": {
+    "hi": 3551,
+    "mr": 2634,
+    "ta": 2550
+  },
+  "per_language_test": {
+    "hi": 1044,
+    "mr": 860,
+    "ta": 800
+  },
+  "channels": {
+    "whatsapp_voice": 3293,
+    "whatsapp_text": 2981,
+    "web_text": 1248,
+    "web_voice": 1213
+  },
+  "duplicate_clusters": 74,
+  "cross_lingual_clusters": 14,
+  "spam_requests": 44,
+  "asr_heldout_size": 50,
+  "treated_pairs": {
+    "Varanasi|roads": "2026-05-15",
+    "Gaya|water_sanitation": "2026-05-01",
+    "Yavatmal|health": "2026-06-01",
+    "Madurai|power": "2026-05-15",
+    "Salem|education": "2026-06-01",
+    "Bhagalpur|public_safety": "2026-05-01"
+  },
+  "assertions": {
+    "total_ge_500": true,
+    "every_language_ge_100": true,
+    "clusters_ge_20": true,
+    "test_after_train_with_gap": true
+  }
+}

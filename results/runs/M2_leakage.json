@@ -1,0 +1,12 @@
+{
+  "checks": {
+    "train_max_before_test_min": true,
+    "train_within_window": true,
+    "test_within_window": true,
+    "guard_gap_days": 14,
+    "no_cluster_spans_windows": true,
+    "cluster_ids_disjoint": true,
+    "gazetteer_is_static_registry": true
+  },
+  "violations": []
+}

@@ -1,0 +1,52 @@
+{
+  "treated": [
+    {
+      "district": "Varanasi",
+      "category": "roads",
+      "effect": -10.0,
+      "rel_rmspe": 0.005,
+      "intime_placebo": 1.6,
+      "pval": 0.0
+    },
+    {
+      "district": "Gaya",
+      "category": "water_sanitation",
+      "effect": -19.0,
+      "rel_rmspe": 0.012,
+      "intime_placebo": 4.3,
+      "pval": 0.0
+    },
+    {
+      "district": "Yavatmal",
+      "category": "health",
+      "effect": -13.5,
+      "rel_rmspe": 0.035,
+      "intime_placebo": -1.1,
+      "pval": 0.0
+    },
+    {
+      "district": "Madurai",
+      "category": "power",
+      "effect": -9.8,
+      "rel_rmspe": 0.04,
+      "intime_placebo": -1.9,
+      "pval": 0.0
+    },
+    {
+      "district": "Salem",
+      "category": "education",
+      "effect": -16.3,
+      "rel_rmspe": 0.104,
+      "intime_placebo": 2.4,
+      "pval": 0.0
+    },
+    {
+      "district": "Bhagalpur",
+      "category": "public_safety",
+      "effect": -13.4,
+      "rel_rmspe": 0.0,
+      "intime_placebo": -2.1,
+      "pval": 0.0
+    }
+  ]
+}

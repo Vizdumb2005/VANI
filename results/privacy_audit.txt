@@ -1,0 +1,10 @@
+VAANI PRIVACY AUDIT (P11)
+========================================
+
+[PASS] raw_phone_numbers_in_persisted_data: 0
+[PASS] retained_audio_files: 0
+[PASS] device_hashes_are_16hex_salted: 17426 rows checked
+[PASS] raw_phone_numbers_in_results: 0
+
+scanned data files: 14
+audit verdict: CLEAN — no raw PII, no retained audio

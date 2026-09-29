@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "premium-ui": {
+      "source": "Dodozz/TECHWHITE",
+      "sourceType": "github",
+      "skillPath": "uploads/SKILL.md",
+      "computedHash": "03343f7c1d717b42dab944a27024bb56d4bb410e9c58489381358584e808b86f"
+    }
+  }
+}

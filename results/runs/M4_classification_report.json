@@ -1,0 +1,36 @@
+{
+  "winner": "A_char_ngram_logreg",
+  "candidates": {
+    "A_char_ngram_logreg": {
+      "overall_macro_f1": 1.0,
+      "per_language_macro_f1": {
+        "hi": 1.0,
+        "mr": 1.0,
+        "ta": 1.0
+      }
+    },
+    "B_word_ngram_linearsvc": {
+      "overall_macro_f1": 1.0,
+      "per_language_macro_f1": {
+        "hi": 1.0,
+        "mr": 1.0,
+        "ta": 1.0
+      }
+    }
+  },
+  "channel_slice": {
+    "text": 1.0,
+    "voice": 1.0
+  },
+  "per_category_f1": {
+    "roads": 1.0,
+    "water_sanitation": 1.0,
+    "power": 1.0,
+    "health": 1.0,
+    "education": 1.0,
+    "public_safety": 1.0,
+    "other": 1.0
+  },
+  "random_state": 42,
+  "inter_language_gap": 0.0
+}

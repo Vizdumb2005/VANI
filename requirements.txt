@@ -1,0 +1,17 @@
+pandas>=2.0
+numpy
+scikit-learn>=1.4
+scipy
+pyarrow
+pyyaml
+fastapi
+uvicorn
+httpx
+python-multipart
+openapi-spec-validator
+matplotlib
+tabulate
+google-genai>=2.0.0
+pytest
+pytest-cov
+

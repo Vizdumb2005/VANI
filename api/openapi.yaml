@@ -1,0 +1,256 @@
+openapi: 3.1.0
+info:
+  title: VAANI — Civic-Request Protocol API
+  version: 1.0.0
+  summary: Voice-to-Network Aggregated National Intelligence — open civic-request protocol
+  description: |
+    VAANI is a multilingual citizen-feedback-to-policy Digital Public Good.
+    This API exposes the civic-request protocol: omnichannel intake
+    (POST /requests), aggregated demand signals, MCDA project priorities,
+    and synthetic-control impact estimates. No raw PII is ever returned:
+    device identifiers are salted hashes, audio is deleted after
+    transcription, and all aggregate cells below the minimum aggregation
+    threshold are suppressed.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: http://localhost:8000
+    description: Local demo deployment
+paths:
+  /requests:
+    post:
+      summary: Submit a citizen request (text or voice)
+      description: |
+        Omnichannel intake. For voice channels, audio is transcribed via the
+        degradation ladder (self-hosted IndicConformer -> Bhashini ULCA ->
+        cached transcript) and deleted immediately after transcription.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [channel, device_id]
+              properties:
+                channel:
+                  type: string
+                  enum: [whatsapp_voice, whatsapp_text, web_voice, web_text]
+                text:
+                  type: string
+                  description: message text (text channels)
+                audio_uri:
+                  type: string
+                  description: audio reference (voice channels), 16kHz mono
+                audio_base64:
+                  type: string
+                  format: byte
+                  description: inline audio payload (voice channels)
+                cached_reference:
+                  type: string
+                  description: demo-mode cached transcript reference
+                device_id:
+                  type: string
+                  description: device/phone identifier (stored only as a salted hash)
+                received_at:
+                  type: string
+                  format: date-time
+      responses:
+        "200":
+          description: request accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  request_id:
+                    type: string
+                    format: uuid
+                  language:
+                    type: string
+                    description: ISO-639 code, auto-detected (never user-declared)
+                  transcript_preview:
+                    type: string
+                  asr_rung:
+                    type: string
+        "422":
+          description: validation error
+  /webhook/whatsapp:
+    post:
+      summary: WhatsApp provider webhook (text and voice notes)
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                Body:
+                  type: string
+                MediaUrl:
+                  type: string
+                From:
+                  type: string
+      responses:
+        "200":
+          description: request accepted
+  /signals:
+    get:
+      summary: Aggregated, deduplicated demand signals
+      description: Aggregate view; cells below the minimum aggregation
+        threshold (3 reports) are never exposed.
+      responses:
+        "200":
+          description: signal list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    lgd_district_code:
+                      type: integer
+                    district:
+                      type: string
+                    category:
+                      type: string
+                      enum: [roads, water_sanitation, power, health, education, public_safety, other]
+                    report_count:
+                      type: integer
+                    signal_count:
+                      type: integer
+                    urgency:
+                      type: number
+                      format: float
+        "503":
+          description: pipeline not built yet
+  /priorities:
+    get:
+      summary: MCDA-ranked project recommendations
+      responses:
+        "200":
+          description: recommendation cards
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    rank:
+                      type: integer
+                    category:
+                      type: string
+                    location:
+                      type: string
+                    demand_intensity:
+                      type: object
+                    deprivation_score:
+                      type: number
+                    scheme_match:
+                      type: object
+                    cost_per_beneficiary_proxy:
+                      type: number
+                    priority:
+                      type: number
+  /impact/{district}:
+    get:
+      summary: Synthetic-control impact estimate for a district
+      parameters:
+        - name: district
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: impact estimate
+        "404":
+          description: no impact estimate for district
+  /health:
+    get:
+      summary: Liveness + ASR ladder status
+      responses:
+        "200":
+          description: ok
+  /privacy:
+    get:
+      summary: Privacy Policy (DPDP Act 2023 & DPGA compliant)
+      responses:
+        "200":
+          description: HTML or Markdown text of the privacy policy
+  /terms:
+    get:
+      summary: Terms of Use and Non-Emergency Service Disclaimer
+      responses:
+        "200":
+          description: HTML or Markdown text of the terms of use
+  /compliance:
+    get:
+      summary: Regulatory compliance audit status and certifications
+      responses:
+        "200":
+          description: Regulatory matrix mapping (DPDP Act 2023, IT Act, DPGA 9 indicators, NDGFP)
+  /priorities/{rank}/memo:
+    get:
+      summary: Cabinet Executive Brief for a prioritized project generated by Google Gemini
+      parameters:
+        - name: rank
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Structured policy memo synthesized by Google Gemini
+  /brics/profiles:
+    get:
+      summary: BRICS cross-border scalability taxonomy (India, Brazil, South Africa)
+      responses:
+        "200":
+          description: BRICS administrative profiles and scheme crosswalks
+  /google-ai/status:
+    get:
+      summary: Google AI Gemini integration health and capabilities
+      responses:
+        "200":
+          description: Google GenAI SDK and active Gemini models status
+  /presentation:
+    get:
+      summary: Interactive 12-slide Pitch Deck & Presentation Mode
+      responses:
+        "200":
+          description: Full-screen interactive HTML5 presentation deck
+  /brics/profile/{iso}:
+    get:
+      summary: Administrative and scheme profile for a specific BRICS country
+      parameters:
+        - name: iso
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [IND, BRA, ZAF]
+      responses:
+        "200":
+          description: Country profile and data standard crosswalk
+  /integrations/cpgrams/status:
+    get:
+      summary: CPGRAMS & State CM Portal Bi-Directional Adapter Status
+      responses:
+        "200":
+          description: Operational status, target endpoint, and ministry routing
+  /integrations/cpgrams/sync:
+    post:
+      summary: Push prioritized community demand hotspots directly to DARPG CPGRAMS
+      parameters:
+        - name: batch_size
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        "200":
+          description: Batch dispatch confirmation and NIC acknowledgment receipt

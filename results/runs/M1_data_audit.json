@@ -1,0 +1,110 @@
+{
+  "tables": {
+    "lgd_registry": {
+      "rows": 120,
+      "cols": [
+        "lgd_state_code",
+        "state_name",
+        "lgd_district_code",
+        "district_name_en",
+        "district_name_hi",
+        "district_name_ta",
+        "lat",
+        "lon"
+      ]
+    },
+    "district_demographics": {
+      "rows": 120,
+      "cols": [
+        "lgd_district_code",
+        "population",
+        "households",
+        "literacy_rate",
+        "sc_share_pct",
+        "st_share_pct",
+        "main_worker_ratio_pct",
+        "rural_pct"
+      ]
+    },
+    "deprivation_index": {
+      "rows": 120,
+      "cols": [
+        "lgd_district_code",
+        "imr",
+        "stunted_child_pct",
+        "improved_water_pct",
+        "electricity_pct",
+        "school_infra_pct",
+        "deprivation_index"
+      ]
+    },
+    "scheme_coverage": {
+      "rows": 840,
+      "cols": [
+        "lgd_district_code",
+        "scheme",
+        "coverage"
+      ]
+    }
+  },
+  "provenance": "Curated real district list (12 states, 120 districts, real names and approximate centroids) with deterministic synthetic values (SEED=42) following Census-2011/NFHS-5/LGD column contracts. Real exports can be dropped in place without code change.",
+  "states": 11,
+  "assertions": {
+    "all_tables_load": true,
+    "lgd_join_keys_zero_null_states": true,
+    "unique_district_codes": true
+  },
+  "validation": {
+    "validator": "workflow/validate_schema.py",
+    "sections": [
+      {
+        "corpus": "train",
+        "rows": 6031,
+        "schema_errors": 0,
+        "quarantined": 0,
+        "reject_rate": 0.0,
+        "window_violations": 0,
+        "language_shares": {
+          "hi": 0.416,
+          "mr": 0.294,
+          "ta": 0.29
+        },
+        "language_imbalance_flag": false
+      },
+      {
+        "corpus": "test",
+        "rows": 2704,
+        "schema_errors": 0,
+        "quarantined": 0,
+        "reject_rate": 0.0,
+        "window_violations": 0,
+        "language_shares": {
+          "hi": 0.386,
+          "mr": 0.318,
+          "ta": 0.296
+        },
+        "language_imbalance_flag": false
+      },
+      {
+        "geocode_mention_rate_train": 0.9257,
+        "geocode_mention_rate_test": 0.9316
+      }
+    ],
+    "rejects": [
+      {
+        "corpus": "train",
+        "quarantined_rows": 0,
+        "schema_error_rows": 0
+      },
+      {
+        "corpus": "test",
+        "quarantined_rows": 0,
+        "schema_error_rows": 0
+      }
+    ],
+    "gates": {
+      "language_min_share": 0.05,
+      "geocode_unresolved_max": 0.15
+    }
+  }
+}

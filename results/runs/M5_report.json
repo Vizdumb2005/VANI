@@ -1,0 +1,148 @@
+{
+  "signals": {
+    "n_signals": 2854,
+    "n_fused": 2758,
+    "unresolved_geo": 96,
+    "low_confidence": 0
+  },
+  "hotspots": {
+    "n_district_category_hotspots": 131,
+    "n_distinct_districts": 55,
+    "top": [
+      {
+        "district": "Jabalpur",
+        "category": "public_safety",
+        "report_count": 141,
+        "excess_ratio": 32.832
+      },
+      {
+        "district": "Banaskantha",
+        "category": "education",
+        "report_count": 79,
+        "excess_ratio": 31.184
+      },
+      {
+        "district": "Puri",
+        "category": "power",
+        "report_count": 84,
+        "excess_ratio": 16.963
+      },
+      {
+        "district": "Chhatrapati Sambhajinagar",
+        "category": "education",
+        "report_count": 113,
+        "excess_ratio": 11.41
+      },
+      {
+        "district": "Vellore",
+        "category": "power",
+        "report_count": 112,
+        "excess_ratio": 11.097
+      },
+      {
+        "district": "Vellore",
+        "category": "education",
+        "report_count": 88,
+        "excess_ratio": 10.7
+      },
+      {
+        "district": "Chandrapur",
+        "category": "health",
+        "report_count": 93,
+        "excess_ratio": 10.565
+      },
+      {
+        "district": "Raigad",
+        "category": "health",
+        "report_count": 105,
+        "excess_ratio": 9.797
+      },
+      {
+        "district": "Varanasi",
+        "category": "roads",
+        "report_count": 82,
+        "excess_ratio": 9.769
+      },
+      {
+        "district": "Raigad",
+        "category": "education",
+        "report_count": 82,
+        "excess_ratio": 9.065
+      }
+    ]
+  },
+  "mcda": {
+    "weights": {
+      "D": 0.4,
+      "G": 0.25,
+      "P": 0.15,
+      "S": 0.2
+    },
+    "top20_spearman_stability": 0.9763
+  },
+  "scheme_match": {
+    "accuracy_top10": 1.0,
+    "checks": [
+      {
+        "card": "Jabalpur|public_safety",
+        "matched_scheme": "Safe City",
+        "expected_scheme": "Safe City",
+        "correct": true
+      },
+      {
+        "card": "Deoghar|public_safety",
+        "matched_scheme": "Safe City",
+        "expected_scheme": "Safe City",
+        "correct": true
+      },
+      {
+        "card": "Bhagalpur|public_safety",
+        "matched_scheme": "Safe City",
+        "expected_scheme": "Safe City",
+        "correct": true
+      },
+      {
+        "card": "Gaya|water_sanitation",
+        "matched_scheme": "Jal Jeevan Mission",
+        "expected_scheme": "Jal Jeevan Mission",
+        "correct": true
+      },
+      {
+        "card": "Sambalpur|education",
+        "matched_scheme": "Samagra Shiksha",
+        "expected_scheme": "Samagra Shiksha",
+        "correct": true
+      },
+      {
+        "card": "Varanasi|roads",
+        "matched_scheme": "PMGSY",
+        "expected_scheme": "PMGSY",
+        "correct": true
+      },
+      {
+        "card": "Cuttack|health",
+        "matched_scheme": "NHM",
+        "expected_scheme": "NHM",
+        "correct": true
+      },
+      {
+        "card": "Khordha|power",
+        "matched_scheme": "IPDS",
+        "expected_scheme": "IPDS",
+        "correct": true
+      },
+      {
+        "card": "Puri|power",
+        "matched_scheme": "IPDS",
+        "expected_scheme": "IPDS",
+        "correct": true
+      },
+      {
+        "card": "Lucknow|water_sanitation",
+        "matched_scheme": "Jal Jeevan Mission",
+        "expected_scheme": "Jal Jeevan Mission",
+        "correct": true
+      }
+    ]
+  }
+}

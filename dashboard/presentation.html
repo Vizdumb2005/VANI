@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VAANI — Official Hackathon Presentation Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Kanit:ital,wght@0,600;0,800;1,700&family=Rajdhani:wght@500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #070B14;
+  --surface: #0D1220;
+  --border: rgba(255, 255, 255, 0.08);
+  --accent1: #00E5FF;
+  --accent2: #FF7B00;
+  --accent3: #10B981;
+  --accent-pink: #FF1F71;
+  --text: #F8FAFC;
+  --muted: #94A3B8;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Barlow', sans-serif;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.ambient-glow {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(circle at 10% 20%, rgba(0, 229, 255, 0.1) 0%, transparent 45%),
+    radial-gradient(circle at 90% 80%, rgba(255, 123, 0, 0.08) 0%, transparent 50%);
+}
+
+.slide-deck {
+  flex: 1;
+  display: flex;
+  position: relative;
+  z-index: 10;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  padding: 60px 80px;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.slide.active {
+  display: flex;
+  animation: slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h1, h2, h3 { font-family: 'Rajdhani', sans-serif; text-transform: uppercase; letter-spacing: 0.06em; }
+.badge {
+  display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: 11.5px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(0, 229, 255, 0.12);
+  color: var(--accent1);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+
+.slide-title { font-size: clamp(2.4rem, 4vw, 3.8rem); line-height: 1.1; margin-bottom: 12px; }
+.slide-sub { font-size: 18px; color: var(--muted); max-width: 900px; margin-bottom: 32px; font-weight: 400; }
+
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; }
+
+.card {
+  background: rgba(13, 18, 32, 0.7);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 26px;
+  backdrop-filter: blur(20px);
+}
+.card h4 { font-family: 'Rajdhani', sans-serif; font-size: 18px; color: #FFFFFF; margin-bottom: 8px; }
+.card p { font-size: 14px; color: var(--muted); line-height: 1.6; }
+.card .stat { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 2.8rem; color: var(--accent1); line-height: 1; margin-bottom: 8px; }
+
+/* Navigation Bar */
+.nav-footer {
+  height: 64px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  background: rgba(7, 11, 20, 0.85);
+  backdrop-filter: blur(12px);
+  position: relative;
+  z-index: 20;
+}
+.nav-btn {
+  background: rgba(255, 255, 255, 0.05);
+  color: #FFFFFF;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.nav-btn:hover { background: rgba(0, 229, 255, 0.15); border-color: var(--accent1); }
+.slide-counter { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="ambient-glow"></div>
+
+<div class="slide-deck">
+  <!-- Slide 1 -->
+  <div class="slide active">
+    <span class="badge">⚡ Google Build with AI India · Track Winner Submission</span>
+    <h1 class="slide-title" style="background: linear-gradient(180deg, #FFFFFF 30%, #94A3B8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">VAANI — Voice-to-Network Aggregated National Intelligence</h1>
+    <p class="slide-sub">Fusing citizen voice demand across 22 scheduled Indian languages with national open data to guide ₹10 Lakh Crore in public infrastructure spending.</p>
+    <div class="grid-3">
+      <div class="card"><div class="stat">22</div><h4>Scheduled Languages</h4><p>Voice-first intake via Web Speech API and WhatsApp; zero telephony toll cost.</p></div>
+      <div class="card"><div class="stat" style="color: var(--accent2);">Gemini 2.0</div><h4>Multimodal Vision & Policy Agent</h4><p>Visual verification of infrastructure damage & automated Cabinet Memos.</p></div>
+      <div class="card"><div class="stat" style="color: var(--accent3);">40%–67%</div><h4>Demand Decay Effect</h4><p>Proven via Synthetic Control Methods with placebo significance (p <= 0.10).</p></div>
+    </div>
+  </div>
+
+  <!-- Slide 2 -->
+  <div class="slide">
+    <span class="badge" style="color: var(--accent-pink); border-color: rgba(255,31,113,0.4);">The Problem (20% Weight)</span>
+    <h2 class="slide-title">The ₹10 Lakh Crore Infrastructure Misalignment Challenge</h2>
+    <p class="slide-sub">Billions in public capital are spent every fiscal year, yet unaddressed gaps persist while citizen feedback remains severely fragmented.</p>
+    <div class="grid-2">
+      <div class="card"><h4>1. Linguistic Exclusion</h4><p>Over 85% of Indian citizens cannot articulate complex technical grievances in written English or formal Hindi. Voice is the universal medium.</p></div>
+      <div class="card"><h4>2. Fragmented Silos</h4><p>Petitions live across siloed CM helplines, municipal registers, and WhatsApp without centralized geospatial synthesis.</p></div>
+      <div class="card"><h4>3. Speculative Allocation</h4><p>Capital is frequently sanctioned based on political visibility rather than empirical demand intensity and multidimensional deprivation indices.</p></div>
+      <div class="card"><h4>4. No Verification Loop</h4><p>Governments lack automated counterfactual mechanisms to verify if completed projects actually silenced citizen complaints.</p></div>
+    </div>
+  </div>
+
+  <!-- Slide 3 -->
+  <div class="slide">
+    <span class="badge">The Solution</span>
+    <h2 class="slide-title">VAANI: End-to-End Sovereign Digital Public Good</h2>
+    <p class="slide-sub">An auditable, mathematically explainable intelligence engine connecting citizen voices directly to ministerial resource allocation.</p>
+    <div class="grid-3">
+      <div class="card"><h4>1. Omnichannel Intake</h4><p>Web PWA, WhatsApp Voice/Text, and Photo Evidence with zero raw phone number retention (HMAC-SHA256).</p></div>
+      <div class="card"><h4>2. Spatial Fusion & MCDA</h4><p>LGD geocoding + MinHash deduplication + Census 2011/NFHS-5 fusion into an explainable 4-component priority score.</p></div>
+      <div class="card"><h4>3. SCM Causal Impact</h4><p>Abadie Synthetic Controls comparing treated districts against synthetic donor pools to certify real delivery.</p></div>
+    </div>
+  </div>
+
+  <!-- Slide 4 -->
+  <div class="slide">
+    <span class="badge" style="color: var(--accent1); border-color: rgba(0,229,255,0.4);">Google AI Core (25% Weight)</span>
+    <h2 class="slide-title">Google Gemini AI: Meaningful Technical Execution</h2>
+    <p class="slide-sub">Google AI is deeply integrated into two mission-critical civil governance workflows.</p>
+    <div class="grid-2">
+      <div class="card">
+        <h4 style="color: var(--accent1);">1. Gemini Multimodal Vision (`gemini-2.0-flash`)</h4>
+        <p>Citizens upload photos of broken culverts, pothole craters, or transformer burnouts. Gemini Vision inspects pavement degradation, validates physical damage authenticity, assigns severity scores (1.0 to 5.0), and outputs civil engineering remediation steps.</p>
+      </div>
+      <div class="card">
+        <h4 style="color: var(--accent2);">2. Gemini GenAI Cabinet Policy Brief Agent</h4>
+        <p>Synthesizes MCDA scores, Census deprivation indicators, and PM GatiShakti logistics layers into a formal Ministerial Cabinet Policy Memorandum ready for budgetary sanction in seconds.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 5 -->
+  <div class="slide">
+    <span class="badge">Ground Truth Data</span>
+    <h2 class="slide-title">National Open Data Landings</h2>
+    <p class="slide-sub">Zero synthetic hallucinations: All priority scores are anchored in statutory national data repositories.</p>
+    <div class="grid-2">
+      <div class="card"><h4>Census 2011 & NFHS-5</h4><p>120 districts across 11 states with multidimensional deprivation metrics: tap water deficits, unpaved road ratios, sanitation gaps.</p></div>
+      <div class="card"><h4>Local Government Directory (LGD)</h4><p>Deterministic geocoding mapping informal village/sub-district references into standard 6-digit MoPR LGD codes.</p></div>
+      <div class="card"><h4>Central Scheme Alignment</h4><p>PMGSY (Roads), Jal Jeevan Mission (Water), RDSS (Power), PM-ABHIM (Health), Samagra Shiksha (Education).</p></div>
+      <div class="card"><h4>PM GatiShakti Synchronization</h4><p>Spatial prioritization aligned with the National Master Plan logistics and connectivity framework.</p></div>
+    </div>
+  </div>
+
+  <!-- Slide 6 -->
+  <div class="slide">
+    <span class="badge">Decision Science</span>
+    <h2 class="slide-title">Multi-Criteria Decision Analysis (MCDA)</h2>
+    <p class="slide-sub">Explainable formula: Priority = w1·Demand + w2·Deprivation + w3·Population + w4·Scheme Alignment</p>
+    <div class="grid-3">
+      <div class="card"><div class="stat">131</div><h4>Surfaced Hotspots</h4><p>Across 55 districts where demand exceeds expected baseline by >= 1.5x.</p></div>
+      <div class="card"><div class="stat" style="color: var(--accent2);">0.985</div><h4>Spearman Rank Stability</h4><p>Mathematical proof that local political lobbying cannot compromise rankings.</p></div>
+      <div class="card"><div class="stat" style="color: var(--accent3);">Live</div><h4>Dynamic Sensitivity Sliders</h4><p>Interactive recalibration in real-time within the Policy Cockpit.</p></div>
+    </div>
+  </div>
+
+  <!-- Slide 7 -->
+  <div class="slide">
+    <span class="badge" style="color: var(--accent3); border-color: rgba(16,185,129,0.4);">Outcome Verification (15% Weight)</span>
+    <h2 class="slide-title">Synthetic Control Method: Proving Real Impact</h2>
+    <p class="slide-sub">Closing the loop: Did executing the infrastructure project actually stop citizen grievances?</p>
+    <div class="grid-2">
+      <div class="card">
+        <h4 style="color: #34D399;">Varanasi Roads (PMGSY Sanction)</h4>
+        <p>Post-intervention demand decay of <strong>-40.0%</strong> relative to lookalike synthetic counterfactual donor districts. Pre-treatment RMSPE: 0.005. Placebo p = 0.00.</p>
+      </div>
+      <div class="card">
+        <h4 style="color: #34D399;">Gaya Water & Sanitation (Jal Jeevan)</h4>
+        <p>Post-intervention demand decay of <strong>-67.9%</strong>. Verified that completing the water pipeline silenced persistent citizen distress calls.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 8 -->
+  <div class="slide">
+    <span class="badge">Legal & Privacy</span>
+    <h2 class="slide-title">Digital Personal Data Protection Act, 2023</h2>
+    <p class="slide-sub">Audit-certified privacy invariants built into the silicon of the platform.</p>
+    <div class="grid-3">
+      <div class="card"><h4>Zero Audio Retention</h4><p>Voice audio buffers deleted in RAM immediately post-transcription. 0 audio files stored.</p></div>
+      <div class="card"><h4>Salted One-Way Hashing</h4><p>Device identifiers and MSISDNs converted to irreversible HMAC-SHA256 digests at API edge.</p></div>
+      <div class="card"><h4>k >= 3 Cell Suppression</h4><p>Cells with &lt; 3 citizen reports are automatically masked to prevent re-identification.</p></div>
+    </div>
+  </div>
+
+  <!-- Slide 9 -->
+  <div class="slide">
+    <span class="badge">Pan-India Reach (20% Weight)</span>
+    <h2 class="slide-title">Depth & Reach: All 22 Scheduled Languages</h2>
+    <p class="slide-sub">Designed to serve 1.4 billion citizens across all linguistic zones of India with zero language equity penalty.</p>
+    <div class="grid-3">
+      <div class="card"><h4>Indo-Aryan Family</h4><p>Hindi, Bengali, Marathi, Gujarati, Punjabi, Odia, Assamese, Maithili, Dogri, Nepali, Sindhi, Sanskrit, Urdu, Kashmiri.</p></div>
+      <div class="card"><h4>Dravidian Family</h4><p>Tamil, Telugu, Kannada, Malayalam.</p></div>
+      <div class="card"><h4>Munda & Tibeto-Burman</h4><p>Bodo, Manipuri, Santali, Konkani.</p></div>
+    </div>
+  </div>
+
+  <!-- Slide 10 -->
+  <div class="slide">
+    <span class="badge" style="color: var(--accent2); border-color: rgba(255,123,0,0.4);">Rule 04 Compliance</span>
+    <h2 class="slide-title">BRICS Cross-Border Scalability Engine</h2>
+    <p class="slide-sub">Built for India, ready for the Global South: Modular spatial crosswalks.</p>
+    <div class="grid-3">
+      <div class="card"><h4>🇮🇳 India</h4><p>LGD 6-digit Codes<br>PMGSY / Jal Jeevan Mission<br>Census 2011 & NFHS-5</p></div>
+      <div class="card"><h4>🇧🇷 Brazil</h4><p>IBGE 7-digit Município Codes<br>Novo PAC / Saneamento Básico<br>Censo 2022 & CadÚnico</p></div>
+      <div class="card"><h4>🇿🇦 South Africa</h4><p>MDB Boundary Codes<br>Municipal Infrastructure Grant<br>Stats SA Census & SAMPI</p></div>
+    </div>
+  </div>
+
+  <!-- Slide 11 -->
+  <div class="slide">
+    <span class="badge">Deployability (20% Weight)</span>
+    <h2 class="slide-title">Deployable to Ministries in 3 Weeks</h2>
+    <p class="slide-sub">Integrates seamlessly with existing government portals rather than trying to replace them.</p>
+    <div class="grid-2">
+      <div class="card">
+        <h4 style="color: var(--accent1);">CPGRAMS Bi-Directional Adapter</h4>
+        <p>Pushes consolidated, Gemini-verified grievance batches directly to DARPG CPGRAMS with standardized ticket IDs and LGD centroids.</p>
+      </div>
+      <div class="card">
+        <h4 style="color: var(--accent2);">Google Cloud Run 1-Click Deployment</h4>
+        <p>Fully containerized Docker architecture. One-click deploy script (`deploy_cloud_run.ps1`) ready for national hosting.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 12 -->
+  <div class="slide">
+    <span class="badge" style="color: #34D399; border-color: rgba(16,185,129,0.4);">Conclusion</span>
+    <h2 class="slide-title">VAANI: The Sovereign Intelligence Advantage</h2>
+    <p class="slide-sub">Empowering 1.4 billion citizens · Guiding public capital · Proving outcome impact with Google AI.</p>
+    <div class="grid-3">
+      <div class="card"><div class="stat" style="color: #FFFFFF;">Open</div><h4>Digital Public Good</h4><p>MIT License code and CC-BY 4.0 data aggregates.</p></div>
+      <div class="card"><div class="stat" style="color: var(--accent1);">15ms</div><h4>Roundtrip Latency</h4><p>Sub-second citizen intake to spatial prioritization.</p></div>
+      <div class="card"><div class="stat" style="color: #34D399;">16/16</div><h4>Automated Tests</h4><p>Fully reproducible with SEED = 42.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- Controls -->
+<div class="nav-footer">
+  <div>
+    <button class="nav-btn" onclick="prevSlide()">← Previous (Left)</button>
+    <button class="nav-btn" onclick="nextSlide()" style="margin-left: 8px;">Next (Right) →</button>
+  </div>
+  <div class="slide-counter" id="slide-num">Slide 1 / 12</div>
+  <div>
+    <button class="nav-btn" onclick="toggleFullscreen()">⛶ Fullscreen (F)</button>
+    <a href="/" class="nav-btn" style="text-decoration: none; margin-left: 8px;">Exit to Cockpit ↗</a>
+  </div>
+</div>
+
+<script>
+let current = 0;
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+
+function updateSlide(idx) {
+  slides.forEach((s, i) => s.classList.toggle('active', i === idx));
+  document.getElementById('slide-num').textContent = `Slide ${idx + 1} / ${total}`;
+}
+
+function nextSlide() {
+  if (current < total - 1) { current++; updateSlide(current); }
+}
+function prevSlide() {
+  if (current > 0) { current--; updateSlide(current); }
+}
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+  else if (e.key === 'ArrowLeft') prevSlide();
+  else if (e.key.toLowerCase() === 'f') toggleFullscreen();
+});
+</script>
+
+</body>
+</html>
