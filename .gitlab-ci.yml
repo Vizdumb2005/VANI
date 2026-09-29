@@ -4,9 +4,20 @@
 stages:
   - lint
   - test
+  - secret-detection
   - audit
   - build
   - deploy
+
+include:
+  - template: Security/SAST.gitlab-ci.yml
+  - template: Security/Secret-Detection.gitlab-ci.yml
+
+sast:
+  stage: test
+
+secret_detection:
+  stage: secret-detection
 
 default:
   image: python:3.11-slim
@@ -16,6 +27,7 @@ default:
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  SECRET_DETECTION_ENABLED: "true"
 
 cache:
   key: "$CI_COMMIT_REF_SLUG"
