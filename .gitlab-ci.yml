@@ -8,11 +8,9 @@ stages:
   - build
   - deploy
 
-# Global variables
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
 
-# Base template for all Python jobs (ensures non-python jobs do NOT inherit pip/python)
 .python-base:
   image: python:3.11
   cache:
@@ -30,7 +28,7 @@ lint:openapi-spec:
   stage: lint
   script:
     - pip install pyyaml openapi-spec-validator
-    - python -c "import yaml; from openapi_spec_validator import validate; spec = yaml.safe_load(open('api/openapi.yaml', encoding='utf-8')); validate(spec); print('OpenAPI 3.1.0 Validation: PASSED')"
+    - python workflow/validate_openapi.py
 
 lint:code-sanity:
   extends: .python-base
@@ -75,9 +73,11 @@ build:container:
     entrypoint: [""]
   before_script:
     - mkdir -p /kaniko/.docker
-    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"username\":\"${CI_REGISTRY_USER}\",\"password\":\"${CI_REGISTRY_PASSWORD}\"}}}" > /kaniko/.docker/config.json
+    - |
+      echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
   script:
-    - /kaniko/executor
+    - >-
+      /kaniko/executor
       --context "${CI_PROJECT_DIR}"
       --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
       --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}"
@@ -117,7 +117,8 @@ deploy:cloud-run:
     - echo "Deploying VAANI Sovereign DPI to Google Cloud Run..."
     - echo "$GCP_SERVICE_KEY" | gcloud auth activate-service-account --key-file=-
     - gcloud config set project "$GCP_PROJECT_ID"
-    - gcloud run deploy vaani-platform
+    - >-
+      gcloud run deploy vaani-platform
       --image "${CI_REGISTRY_IMAGE}:latest"
       --region "${GCP_REGION:-asia-south1}"
       --platform managed
