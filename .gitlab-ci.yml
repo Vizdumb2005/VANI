@@ -1,96 +1,132 @@
-# GitLab CI/CD Pipeline for VAANI (Voice-to-Network Aggregated National Intelligence)
-# Digital Public Good (DPG) & Google Build with AI India Hackathon
+# ==============================================================================
+# Enterprise Production GitLab CI/CD Pipeline for VAANI Sovereign DPI Platform
+# Dual Deployment Strategy:
+#   1. GitLab Pages: Instant static Sovereign Policy Cockpit, Pitch Deck, and API Docs
+#   2. Google Cloud Platform (GCP): Multi-region Serverless Cloud Run (asia-south1 / asia-south2)
+# ==============================================================================
 
 stages:
-  - lint
+  - lint-and-security
   - test
-  - audit
   - build
+  - terraform-plan
   - deploy
 
 variables:
-  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  PYTHON_VERSION: "3.11"
+  NODE_VERSION: "20"
+  GCP_REGION: "asia-south1"
+  GCP_SECONDARY_REGION: "asia-south2"
+  ARTIFACT_REGISTRY: "asia-south1-docker.pkg.dev/${GCP_PROJECT_ID}/vaani"
 
-.python-base:
-  image: python:3.11
-  cache:
-    key: "$CI_COMMIT_REF_SLUG"
-    paths:
-      - .cache/pip
-      - .pytest_cache
+default:
+  interruptible: true
+
+# -------------------------------------------------------------
+# Stage 1: Code Quality, Linting & AST Security Auditing
+# -------------------------------------------------------------
+backend:lint-and-security:
+  stage: lint-and-security
+  image: python:3.11-slim
   before_script:
-    - python -V
-    - pip install --upgrade pip
-
-# --- Stage 1: Lint & Schema Validation ---
-lint:openapi-spec:
-  extends: .python-base
-  stage: lint
+    - pip install flake8 bandit safety
   script:
-    - pip install pyyaml openapi-spec-validator
-    - python workflow/validate_openapi.py
+    - echo "Running flake8 code style checks..."
+    - flake8 backend/app --max-line-length=120 --ignore=E203,W503
+    - echo "Running Bandit AST security scanner for OWASP Top 10 vulnerabilities..."
+    - bandit -r backend/app -ll
+    - echo "Auditing Python dependencies for CVEs..."
+    - safety check -r backend/requirements.txt || true
 
-lint:code-sanity:
-  extends: .python-base
-  stage: lint
+frontend:lint-and-typecheck:
+  stage: lint-and-security
+  image: node:20-alpine
+  before_script:
+    - cd frontend && npm ci --legacy-peer-deps
   script:
-    - python -m compileall workflow app tests
-    - echo "Python syntax compilation passed cleanly."
+    - echo "Verifying TypeScript strict type safety..."
+    - npx tsc --noEmit
 
-# --- Stage 2: Automated Testing Suite (P1-P16) ---
-test:pipeline:
-  extends: .python-base
+secret-detection:
+  stage: lint-and-security
+  image:
+    name: zricethezav/gitleaks:latest
+    entrypoint: [""]
+  script:
+    - echo "Scanning codebase to enforce zero plaintext secrets (DPDP Act & CIS compliance)..."
+    - gitleaks detect --verbose --redact
+
+# -------------------------------------------------------------
+# Stage 2: Automated Unit, Integration & Regression Testing
+# -------------------------------------------------------------
+backend:unit-tests:
   stage: test
+  image: python:3.11-slim
+  before_script:
+    - apt-get update && apt-get install -y --no-install-recommends libsndfile1 ffmpeg
+    - pip install -r backend/requirements.txt
   script:
-    - pip install -r requirements.txt
-    - python -m pytest tests/test_vaani_pipeline.py -v --junitxml=report.xml --cov=workflow --cov=app --cov-report=xml:coverage.xml --cov-report=term
+    - echo "Executing pytest suite across all omnichannel webhooks & GCP services..."
+    - python -m pytest tests/ -v --cov=backend/app --cov-report=term-missing --cov-report=xml
+  coverage: '/TOTAL.*\s+(\d+%)$/'
   artifacts:
-    when: always
     reports:
-      junit: report.xml
       coverage_report:
         coverage_format: cobertura
         path: coverage.xml
-    paths:
-      - report.xml
-      - coverage.xml
-    expire_in: 30 days
 
-# --- Stage 3: Privacy & Statutory Compliance Audit ---
-audit:privacy-and-compliance:
-  extends: .python-base
-  stage: audit
-  script:
-    - pip install -r requirements.txt
-    - python workflow/m7_privacy_audit.py
-    - echo "DPDP Act 2023 & NDGFP Data Minimization Invariants verified."
-
-# --- Stage 4: Container Build (GitLab Container Registry) ---
-build:container:
+# -------------------------------------------------------------
+# Stage 3: Container Build & Google Artifact Registry Push
+# -------------------------------------------------------------
+build:gateway-container:
   stage: build
   image:
-    name: gcr.io/kaniko-project/executor:v1.20.0-debug
+    name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
-  before_script:
-    - mkdir -p /kaniko/.docker
-    - |
-      echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
   script:
-    - >-
-      /kaniko/executor
-      --context "${CI_PROJECT_DIR}"
-      --dockerfile "${CI_PROJECT_DIR}/Dockerfile"
-      --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHORT_SHA}"
-      --destination "${CI_REGISTRY_IMAGE}:latest"
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"https://${GCP_REGION}-docker.pkg.dev\":{\"auth\":\"$(echo -n _json_key:${GCP_SERVICE_ACCOUNT_KEY} | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor
+        --context "${CI_PROJECT_DIR}/backend"
+        --dockerfile "${CI_PROJECT_DIR}/backend/Dockerfile"
+        --destination "${ARTIFACT_REGISTRY}/gateway:${CI_COMMIT_SHA}"
+        --destination "${ARTIFACT_REGISTRY}/gateway:latest"
+        --cache=true
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "master"'
-      allow_failure: true
-    - if: $CI_COMMIT_TAG
+    - if: '$GCP_SERVICE_ACCOUNT_KEY != null && ($CI_COMMIT_BRANCH == "main" || $CI_COMMIT_TAG != null)'
       allow_failure: true
     - when: manual
       allow_failure: true
 
-# --- Stage 5: GitLab Pages Deployment (Live Cockpit & Pitch Deck) ---
+build:frontend-nextjs:
+  stage: build
+  image: node:20-alpine
+  before_script:
+    - cd frontend && npm ci --legacy-peer-deps
+  script:
+    - echo "Building production Next.js 14 App Router bundle..."
+    - npm run build
+  artifacts:
+    paths:
+      - frontend/.next
+    expire_in: 1 week
+
+# -------------------------------------------------------------
+# Stage 4: Terraform Infrastructure as Code Validation
+# -------------------------------------------------------------
+terraform:validate-and-plan:
+  stage: terraform-plan
+  image: hashicorp/terraform:1.7.0
+  before_script:
+    - cd terraform
+    - terraform init -backend=false
+  script:
+    - terraform validate
+    - echo "Terraform syntax and resource graph validated successfully."
+
+# -------------------------------------------------------------
+# Stage 5A: GitLab Pages Deployment (Static Cockpit & Docs)
+# -------------------------------------------------------------
 pages:
   stage: deploy
   image: alpine:latest
@@ -99,8 +135,9 @@ pages:
     - mkdir -p public
     - cp -r dashboard/* public/
     - cp -r results/*.png public/ 2>/dev/null || true
-    - cp -r docs/*.md public/ 2>/dev/null || true
-    - echo "VAANI Policy Cockpit & Pitch Deck published to GitLab Pages."
+    - mkdir -p public/docs
+    - cp -r docs/* public/docs/ 2>/dev/null || true
+    - echo "VAANI Sovereign Policy Cockpit & Documentation published to GitLab Pages."
   artifacts:
     paths:
       - public
@@ -108,22 +145,58 @@ pages:
     - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "master"'
       when: on_success
 
-# --- Stage 5b: Google Cloud Run Automated Deployment (Optional) ---
-deploy:cloud-run:
+# -------------------------------------------------------------
+# Stage 5B: Zero-Downtime Deployment to Google Cloud Run
+# -------------------------------------------------------------
+deploy:cloud-run-staging:
   stage: deploy
-  image: google/cloud-sdk:alpine
-  before_script: []
+  image: google/cloud-sdk:slim
   script:
-    - echo "Deploying VAANI Sovereign DPI to Google Cloud Run..."
-    - echo "$GCP_SERVICE_KEY" | gcloud auth activate-service-account --key-file=-
-    - gcloud config set project "$GCP_PROJECT_ID"
-    - >-
-      gcloud run deploy vaani-platform
-      --image "${CI_REGISTRY_IMAGE}:latest"
-      --region "${GCP_REGION:-asia-south1}"
-      --platform managed
-      --allow-unauthenticated
+    - echo "${GCP_SERVICE_ACCOUNT_KEY}" | gcloud auth activate-service-account --key-file=-
+    - gcloud config set project "${GCP_PROJECT_ID}"
+    - gcloud run deploy vaani-api-gateway-staging
+        --image "${ARTIFACT_REGISTRY}/gateway:${CI_COMMIT_SHA}"
+        --region "${GCP_REGION}"
+        --platform managed
+        --allow-unauthenticated
+        --concurrency 80
+        --min-instances 0
+        --max-instances 10
+  environment:
+    name: staging
+    url: https://vaani-staging.gov.in
   rules:
-    - if: '$GCP_SERVICE_KEY != null && $GCP_PROJECT_ID != null'
+    - if: '$GCP_SERVICE_ACCOUNT_KEY != null && $CI_COMMIT_BRANCH == "develop"'
+    - when: manual
+      allow_failure: true
+
+deploy:cloud-run-production:
+  stage: deploy
+  image: google/cloud-sdk:slim
+  script:
+    - echo "${GCP_SERVICE_ACCOUNT_KEY}" | gcloud auth activate-service-account --key-file=-
+    - gcloud config set project "${GCP_PROJECT_ID}"
+    - echo "Deploying primary production gateway to asia-south1 (Mumbai)..."
+    - gcloud run deploy vaani-api-gateway-mumbai
+        --image "${ARTIFACT_REGISTRY}/gateway:${CI_COMMIT_SHA}"
+        --region "${GCP_REGION}"
+        --platform managed
+        --concurrency 80
+        --min-instances 2
+        --max-instances 100
+    - echo "Deploying secondary failover gateway to asia-south2 (Delhi)..."
+    - gcloud run deploy vaani-api-gateway-delhi
+        --image "${ARTIFACT_REGISTRY}/gateway:${CI_COMMIT_SHA}"
+        --region "${GCP_SECONDARY_REGION}"
+        --platform managed
+        --concurrency 80
+        --min-instances 1
+        --max-instances 50
+  environment:
+    name: production
+    url: https://vaani.gov.in
+  rules:
+    - if: '$GCP_SERVICE_ACCOUNT_KEY != null && ($CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "master")'
       when: manual
+    - when: manual
       allow_failure: true

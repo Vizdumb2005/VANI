@@ -1,0 +1,252 @@
+[
+  {
+    "rank": 1,
+    "category": "public_safety",
+    "location": "Jabalpur",
+    "lgd_district_code": 153,
+    "demand_intensity": {
+      "report_count": 141,
+      "excess_ratio": 32.832,
+      "per_lakh_per_year": 19.0
+    },
+    "deprivation_score": 0.6,
+    "scheme_match": {
+      "scheme": "Safe City",
+      "description": "Nirbhaya Fund Safe City projects - urban safety",
+      "current_coverage": 0.128
+    },
+    "cost_per_beneficiary_proxy": 24.2,
+    "priority": 0.8014,
+    "components": {
+      "D_demand": 1.0,
+      "G_deprivation": 0.791,
+      "P_population": 0.204,
+      "S_scheme_alignment": 0.866
+    }
+  },
+  {
+    "rank": 2,
+    "category": "public_safety",
+    "location": "Deoghar",
+    "lgd_district_code": 217,
+    "demand_intensity": {
+      "report_count": 100,
+      "excess_ratio": 7.11,
+      "per_lakh_per_year": 4.1
+    },
+    "deprivation_score": 0.9,
+    "scheme_match": {
+      "scheme": "Safe City",
+      "description": "Nirbhaya Fund Safe City projects - urban safety",
+      "current_coverage": 0.02
+    },
+    "cost_per_beneficiary_proxy": 7.4,
+    "priority": 0.7287,
+    "components": {
+      "D_demand": 0.483,
+      "G_deprivation": 0.899,
+      "P_population": 0.739,
+      "S_scheme_alignment": 1.0
+    }
+  },
+  {
+    "rank": 3,
+    "category": "public_safety",
+    "location": "Bhagalpur",
+    "lgd_district_code": 114,
+    "demand_intensity": {
+      "report_count": 80,
+      "excess_ratio": 4.159,
+      "per_lakh_per_year": 2.4
+    },
+    "deprivation_score": 1.0,
+    "scheme_match": {
+      "scheme": "Safe City",
+      "description": "Nirbhaya Fund Safe City projects - urban safety",
+      "current_coverage": 0.02
+    },
+    "cost_per_beneficiary_proxy": 5.4,
+    "priority": 0.6973,
+    "components": {
+      "D_demand": 0.328,
+      "G_deprivation": 0.936,
+      "P_population": 0.88,
+      "S_scheme_alignment": 1.0
+    }
+  },
+  {
+    "rank": 4,
+    "category": "water_sanitation",
+    "location": "Gaya",
+    "lgd_district_code": 112,
+    "demand_intensity": {
+      "report_count": 78,
+      "excess_ratio": 3.951,
+      "per_lakh_per_year": 2.6
+    },
+    "deprivation_score": 1.177,
+    "scheme_match": {
+      "scheme": "Jal Jeevan Mission",
+      "description": "Har Ghar Jal - functional household tap connections",
+      "current_coverage": 0.246
+    },
+    "cost_per_beneficiary_proxy": 9.4,
+    "priority": 0.6589,
+    "components": {
+      "D_demand": 0.352,
+      "G_deprivation": 1.0,
+      "P_population": 0.83,
+      "S_scheme_alignment": 0.719
+    }
+  },
+  {
+    "rank": 5,
+    "category": "education",
+    "location": "Sambalpur",
+    "lgd_district_code": 194,
+    "demand_intensity": {
+      "report_count": 100,
+      "excess_ratio": 8.8,
+      "per_lakh_per_year": 4.7
+    },
+    "deprivation_score": 0.578,
+    "scheme_match": {
+      "scheme": "Samagra Shiksha",
+      "description": "School infrastructure and teacher support",
+      "current_coverage": 0.279
+    },
+    "cost_per_beneficiary_proxy": 10.4,
+    "priority": 0.6429,
+    "components": {
+      "D_demand": 0.525,
+      "G_deprivation": 0.783,
+      "P_population": 0.677,
+      "S_scheme_alignment": 0.678
+    }
+  },
+  {
+    "rank": 6,
+    "category": "roads",
+    "location": "Varanasi",
+    "lgd_district_code": 102,
+    "demand_intensity": {
+      "report_count": 82,
+      "excess_ratio": 9.769,
+      "per_lakh_per_year": 7.1
+    },
+    "deprivation_score": 0.595,
+    "scheme_match": {
+      "scheme": "PMGSY",
+      "description": "Pradhan Mantri Gram Sadak Yojana - rural road connectivity",
+      "current_coverage": 0.332
+    },
+    "cost_per_beneficiary_proxy": 36.2,
+    "priority": 0.6428,
+    "components": {
+      "D_demand": 0.656,
+      "G_deprivation": 0.789,
+      "P_population": 0.405,
+      "S_scheme_alignment": 0.612
+    }
+  },
+  {
+    "rank": 7,
+    "category": "health",
+    "location": "Cuttack",
+    "lgd_district_code": 192,
+    "demand_intensity": {
+      "report_count": 92,
+      "excess_ratio": 6.894,
+      "per_lakh_per_year": 4.4
+    },
+    "deprivation_score": 0.548,
+    "scheme_match": {
+      "scheme": "NHM",
+      "description": "National Health Mission - rural health infrastructure",
+      "current_coverage": 0.235
+    },
+    "cost_per_beneficiary_proxy": 23.8,
+    "priority": 0.6412,
+    "components": {
+      "D_demand": 0.502,
+      "G_deprivation": 0.772,
+      "P_population": 0.673,
+      "S_scheme_alignment": 0.733
+    }
+  },
+  {
+    "rank": 8,
+    "category": "power",
+    "location": "Khordha",
+    "lgd_district_code": 191,
+    "demand_intensity": {
+      "report_count": 92,
+      "excess_ratio": 4.881,
+      "per_lakh_per_year": 3.2
+    },
+    "deprivation_score": 1.069,
+    "scheme_match": {
+      "scheme": "IPDS",
+      "description": "Integrated Power Development Scheme - distribution strengthening",
+      "current_coverage": 0.403
+    },
+    "cost_per_beneficiary_proxy": 12.2,
+    "priority": 0.6305,
+    "components": {
+      "D_demand": 0.409,
+      "G_deprivation": 0.961,
+      "P_population": 0.813,
+      "S_scheme_alignment": 0.524
+    }
+  },
+  {
+    "rank": 9,
+    "category": "power",
+    "location": "Puri",
+    "lgd_district_code": 196,
+    "demand_intensity": {
+      "report_count": 84,
+      "excess_ratio": 16.963,
+      "per_lakh_per_year": 11.2
+    },
+    "deprivation_score": 0.594,
+    "scheme_match": {
+      "scheme": "IPDS",
+      "description": "Integrated Power Development Scheme - distribution strengthening",
+      "current_coverage": 0.596
+    },
+    "cost_per_beneficiary_proxy": 46.5,
+    "priority": 0.61,
+    "components": {
+      "D_demand": 0.811,
+      "G_deprivation": 0.789,
+      "P_population": 0.21,
+      "S_scheme_alignment": 0.284
+    }
+  },
+  {
+    "rank": 10,
+    "category": "water_sanitation",
+    "location": "Lucknow",
+    "lgd_district_code": 101,
+    "demand_intensity": {
+      "report_count": 41,
+      "excess_ratio": 2.469,
+      "per_lakh_per_year": 1.6
+    },
+    "deprivation_score": 0.96,
+    "scheme_match": {
+      "scheme": "Jal Jeevan Mission",
+      "description": "Har Ghar Jal - functional household tap connections",
+      "current_coverage": 0.187
+    },
+    "cost_per_beneficiary_proxy": 11.2,
+    "priority": 0.5942,
+    "components": {
+      "D_demand": 0.231,
+      "G_deprivation": 0.921,
+      "P_population": 0.752,
+      "S_scheme_alignment": 0.792
+    }
+  }
+]

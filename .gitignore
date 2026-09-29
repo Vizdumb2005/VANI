@@ -1,17 +1,17 @@
-# Python artifacts
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
+
+# Distribution / packaging
 build/
 develop-eggs/
 dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
 parts/
 sdist/
 var/
@@ -22,12 +22,28 @@ wheels/
 
 # Virtual environments
 .env
+.env.local
 .venv
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Node & Next.js
+node_modules/
+**/node_modules/
+.next/
+**/.next/
+out/
+**/out/
+.turbo/
+next-env.d.ts
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
 # Testing & Coverage
 .pytest_cache/
@@ -36,6 +52,13 @@ venv.bak/
 htmlcov/
 .tox/
 .nox/
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
 
 # IDE & OS
 .idea/
@@ -48,3 +71,7 @@ Thumbs.db
 
 # Logs
 *.log
+results/rebuild.log
+
+# Ensure essential source directories are NOT ignored
+!frontend/src/lib/

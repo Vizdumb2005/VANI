@@ -1,0 +1,2658 @@
+[
+  {
+    "lgd_district_code": 101,
+    "district": "Bharatpur",
+    "category": "water_sanitation",
+    "report_count": 4,
+    "signal_count": 2,
+    "urgency": 0.251
+  },
+  {
+    "lgd_district_code": 101,
+    "district": "Cuttack",
+    "category": "water_sanitation",
+    "report_count": 6,
+    "signal_count": 3,
+    "urgency": 0.493
+  },
+  {
+    "lgd_district_code": 101,
+    "district": "Dindigul",
+    "category": "water_sanitation",
+    "report_count": 4,
+    "signal_count": 2,
+    "urgency": 0.493
+  },
+  {
+    "lgd_district_code": 101,
+    "district": "Jabalpur",
+    "category": "roads",
+    "report_count": 8,
+    "signal_count": 4,
+    "urgency": 0.184
+  },
+  {
+    "lgd_district_code": 101,
+    "district": "Lucknow",
+    "category": "education",
+    "report_count": 10,
+    "signal_count": 8,
+    "urgency": 0.35
+  },
+  {
+    "lgd_district_code": 101,
+    "district": "Lucknow",
+    "category": "health",
+    "report_count": 34,
+    "signal_count": 16,
+    "urgency": 0.97
+  },
+  {
+    "lgd_district_code": 101,
+    "district": "Lucknow",
+    "category": "other",
+    "report_count": 21,
+    "signal_count": 16,
+    "urgency": 0.79
+  },
+  {
+    "lgd_district_code": 101,
+    "district": "Lucknow",
+    "category": "power",
+    "report_count": 6,
+    "signal_count": 6,
+    "urgency": 0.85
+  },
+  {
+    "lgd_district_code": 101,
+    "district": "Lucknow",
+    "category": "public_safety",
+    "report_count": 11,
+    "signal_count": 8,
+    "urgency": 0.91
+  },
+  {
+    "lgd_district_code": 101,
+    "district": "Lucknow",
+    "category": "roads",
+    "report_count": 14,
+    "signal_count": 6,
+    "urgency": 0.432
+  },
+  {
+    "lgd_district_code": 101,
+    "district": "Lucknow",
+    "category": "water_sanitation",
+    "report_count": 41,
+    "signal_count": 19,
+    "urgency": 0.495
+  },
+  {
+    "lgd_district_code": 101,
+    "district": "Prayagraj",
+    "category": "roads",
+    "report_count": 12,
+    "signal_count": 6,
+    "urgency": 0.433
+  },
+  {
+    "lgd_district_code": 101,
+    "district": "Raigad",
+    "category": "roads",
+    "report_count": 4,
+    "signal_count": 2,
+    "urgency": 0.189
+  },
+  {
+    "lgd_district_code": 101,
+    "district": "UNKNOWN",
+    "category": "roads",
+    "report_count": 4,
+    "signal_count": 1,
+    "urgency": 0.191
+  },
+  {
+    "lgd_district_code": 102,
+    "district": "Cuttack",
+    "category": "power",
+    "report_count": 6,
+    "signal_count": 3,
+    "urgency": 0.158
+  },
+  {
+    "lgd_district_code": 102,
+    "district": "UNKNOWN",
+    "category": "roads",
+    "report_count": 6,
+    "signal_count": 2,
+    "urgency": 0.391
+  },
+  {
+    "lgd_district_code": 102,
+    "district": "Varanasi",
+    "category": "roads",
+    "report_count": 82,
+    "signal_count": 45,
+    "urgency": 0.88
+  },
+  {
+    "lgd_district_code": 103,
+    "district": "Chandrapur",
+    "category": "water_sanitation",
+    "report_count": 3,
+    "signal_count": 1,
+    "urgency": 0.245
+  },
+  {
+    "lgd_district_code": 103,
+    "district": "Gaya",
+    "category": "roads",
+    "report_count": 6,
+    "signal_count": 3,
+    "urgency": 0.185
+  },
+  {
+    "lgd_district_code": 103,
+    "district": "Kanpur Nagar",
+    "category": "education",
+    "report_count": 11,
+    "signal_count": 11,
+    "urgency": 0.85
+  },
+  {
+    "lgd_district_code": 103,
+    "district": "Kanpur Nagar",
+    "category": "health",
+    "report_count": 16,
+    "signal_count": 15,
+    "urgency": 0.97
+  },
+  {
+    "lgd_district_code": 103,
+    "district": "Kanpur Nagar",
+    "category": "other",
+    "report_count": 20,
+    "signal_count": 16,
+    "urgency": 0.353
+  },
+  {
+    "lgd_district_code": 103,
+    "district": "Kanpur Nagar",
+    "category": "power",
+    "report_count": 28,
+    "signal_count": 14,
+    "urgency": 0.404
+  },
+  {
+    "lgd_district_code": 103,
+    "district": "Kanpur Nagar",
+    "category": "public_safety",
+    "report_count": 9,
+    "signal_count": 8,
+    "urgency": 0.91
+  },
+  {
+    "lgd_district_code": 103,
+    "district": "Kanpur Nagar",
+    "category": "roads",
+    "report_count": 27,
+    "signal_count": 15,
+    "urgency": 0.432
+  },
+  {
+    "lgd_district_code": 103,
+    "district": "Kanpur Nagar",
+    "category": "water_sanitation",
+    "report_count": 32,
+    "signal_count": 17,
+    "urgency": 0.498
+  },
+  {
+    "lgd_district_code": 103,
+    "district": "Purnia",
+    "category": "roads",
+    "report_count": 4,
+    "signal_count": 2,
+    "urgency": 0.185
+  },
+  {
+    "lgd_district_code": 103,
+    "district": "Salem",
+    "category": "health",
+    "report_count": 3,
+    "signal_count": 1,
+    "urgency": 0.606
+  },
+  {
+    "lgd_district_code": 103,
+    "district": "Salem",
+    "category": "roads",
+    "report_count": 6,
+    "signal_count": 3,
+    "urgency": 0.432
+  },
+  {
+    "lgd_district_code": 103,
+    "district": "UNKNOWN",
+    "category": "health",
+    "report_count": 5,
+    "signal_count": 1,
+    "urgency": 0.578
+  },
+  {
+    "lgd_district_code": 103,
+    "district": "UNKNOWN",
+    "category": "roads",
+    "report_count": 6,
+    "signal_count": 2,
+    "urgency": 0.187
+  },
+  {
+    "lgd_district_code": 103,
+    "district": "UNKNOWN",
+    "category": "water_sanitation",
+    "report_count": 6,
+    "signal_count": 1,
+    "urgency": 0.418
+  },
+  {
+    "lgd_district_code": 103,
+    "district": "Vellore",
+    "category": "water_sanitation",
+    "report_count": 6,
+    "signal_count": 3,
+    "urgency": 0.494
+  },
+  {
+    "lgd_district_code": 106,
+    "district": "Dindigul",
+    "category": "water_sanitation",
+    "report_count": 3,
+    "signal_count": 1,
+    "urgency": 0.249
+  },
+  {
+    "lgd_district_code": 106,
+    "district": "Latur",
+    "category": "water_sanitation",
+    "report_count": 6,
+    "signal_count": 3,
+    "urgency": 0.493
+  },
+  {
+    "lgd_district_code": 106,
+    "district": "Prayagraj",
+    "category": "education",
+    "report_count": 12,
+    "signal_count": 10,
+    "urgency": 0.85
+  },
+  {
+    "lgd_district_code": 106,
+    "district": "Prayagraj",
+    "category": "health",
+    "report_count": 14,
+    "signal_count": 13,
+    "urgency": 0.97
+  },
+  {
+    "lgd_district_code": 106,
+    "district": "Prayagraj",
+    "category": "other",
+    "report_count": 22,
+    "signal_count": 19,
+    "urgency": 0.79
+  },
+  {
+    "lgd_district_code": 106,
+    "district": "Prayagraj",
+    "category": "power",
+    "report_count": 21,
+    "signal_count": 17,
+    "urgency": 0.85
+  },
+  {
+    "lgd_district_code": 106,
+    "district": "Prayagraj",
+    "category": "public_safety",
+    "report_count": 16,
+    "signal_count": 15,
+    "urgency": 0.91
+  },
+  {
+    "lgd_district_code": 106,
+    "district": "Prayagraj",
+    "category": "roads",
+    "report_count": 33,
+    "signal_count": 14,
+    "urgency": 0.434
+  },
+  {
+    "lgd_district_code": 106,
+    "district": "Prayagraj",
+    "category": "water_sanitation",
+    "report_count": 22,
+    "signal_count": 13,
+    "urgency": 0.493
+  },
+  {
+    "lgd_district_code": 106,
+    "district": "UNKNOWN",
+    "category": "power",
+    "report_count": 4,
+    "signal_count": 1,
+    "urgency": 0.16
+  },
+  {
+    "lgd_district_code": 106,
+    "district": "UNKNOWN",
+    "category": "water_sanitation",
+    "report_count": 3,
+    "signal_count": 1,
+    "urgency": 0.243
+  },
+  {
+    "lgd_district_code": 106,
+    "district": "Vellore",
+    "category": "roads",
+    "report_count": 4,
+    "signal_count": 2,
+    "urgency": 0.184
+  },
+  {
+    "lgd_district_code": 112,
+    "district": "Gaya",
+    "category": "health",
+    "report_count": 11,
+    "signal_count": 1,
+    "urgency": 0.377
+  },
+  {
+    "lgd_district_code": 112,
+    "district": "Gaya",
+    "category": "power",
+    "report_count": 10,
+    "signal_count": 6,
+    "urgency": 0.35
+  },
+  {
+    "lgd_district_code": 112,
+    "district": "Gaya",
+    "category": "roads",
+    "report_count": 29,
+    "signal_count": 10,
+    "urgency": 0.88
+  },
+  {
+    "lgd_district_code": 112,
+    "district": "Gaya",
+    "category": "water_sanitation",
+    "report_count": 78,
+    "signal_count": 47,
+    "urgency": 0.94
+  },
+  {
+    "lgd_district_code": 112,
+    "district": "Jabalpur",
+    "category": "power",
+    "report_count": 4,
+    "signal_count": 2,
+    "urgency": 0.402
+  },
+  {
+    "lgd_district_code": 112,
+    "district": "UNKNOWN",
+    "category": "water_sanitation",
+    "report_count": 29,
+    "signal_count": 5,
+    "urgency": 0.38
+  },
+  {
+    "lgd_district_code": 113,
+    "district": "Muzaffarpur",
+    "category": "other",
+    "report_count": 12,
+    "signal_count": 2,
+    "urgency": 0.317
+  },
+  {
+    "lgd_district_code": 114,
+    "district": "Bhagalpur",
+    "category": "education",
+    "report_count": 19,
+    "signal_count": 1,
+    "urgency": 0.403
+  },
+  {
+    "lgd_district_code": 114,
+    "district": "Bhagalpur",
+    "category": "health",
+    "report_count": 19,
+    "signal_count": 2,
+    "urgency": 0.73
+  },
+  {
+    "lgd_district_code": 114,
+    "district": "Bhagalpur",
+    "category": "power",
+    "report_count": 12,
+    "signal_count": 1,
+    "urgency": 0.437
+  },
+  {
+    "lgd_district_code": 114,
+    "district": "Bhagalpur",
+    "category": "public_safety",
+    "report_count": 80,
+    "signal_count": 53,
+    "urgency": 0.91
+  },
+  {
+    "lgd_district_code": 116,
+    "district": "Cuttack",
+    "category": "water_sanitation",
+    "report_count": 6,
+    "signal_count": 3,
+    "urgency": 0.252
+  },
+  {
+    "lgd_district_code": 116,
+    "district": "Dindigul",
+    "category": "water_sanitation",
+    "report_count": 6,
+    "signal_count": 3,
+    "urgency": 0.244
+  },
+  {
+    "lgd_district_code": 116,
+    "district": "Jabalpur",
+    "category": "roads",
+    "report_count": 4,
+    "signal_count": 2,
+    "urgency": 0.186
+  },
+  {
+    "lgd_district_code": 116,
+    "district": "Latur",
+    "category": "water_sanitation",
+    "report_count": 8,
+    "signal_count": 4,
+    "urgency": 0.492
+  },
+  {
+    "lgd_district_code": 116,
+    "district": "Purnia",
+    "category": "education",
+    "report_count": 16,
+    "signal_count": 13,
+    "urgency": 0.402
+  },
+  {
+    "lgd_district_code": 116,
+    "district": "Purnia",
+    "category": "health",
+    "report_count": 15,
+    "signal_count": 15,
+    "urgency": 0.97
+  },
+  {
+    "lgd_district_code": 116,
+    "district": "Purnia",
+    "category": "other",
+    "report_count": 12,
+    "signal_count": 10,
+    "urgency": 0.79
+  },
+  {
+    "lgd_district_code": 116,
+    "district": "Purnia",
+    "category": "power",
+    "report_count": 18,
+    "signal_count": 14,
+    "urgency": 0.85
+  },
+  {
+    "lgd_district_code": 116,
+    "district": "Purnia",
+    "category": "public_safety",
+    "report_count": 19,
+    "signal_count": 17,
+    "urgency": 0.91
+  },
+  {
+    "lgd_district_code": 116,
+    "district": "Purnia",
+    "category": "roads",
+    "report_count": 34,
+    "signal_count": 17,
+    "urgency": 0.433
+  },
+  {
+    "lgd_district_code": 116,
+    "district": "Purnia",
+    "category": "water_sanitation",
+    "report_count": 26,
+    "signal_count": 15,
+    "urgency": 0.5
+  },
+  {
+    "lgd_district_code": 116,
+    "district": "Raigad",
+    "category": "roads",
+    "report_count": 4,
+    "signal_count": 2,
+    "urgency": 0.198
+  },
+  {
+    "lgd_district_code": 116,
+    "district": "UNKNOWN",
+    "category": "education",
+    "report_count": 4,
+    "signal_count": 1,
+    "urgency": 0.28
+  },
+  {
+    "lgd_district_code": 116,
+    "district": "UNKNOWN",
+    "category": "roads",
+    "report_count": 3,
+    "signal_count": 1,
+    "urgency": 0.187
+  },
+  {
+    "lgd_district_code": 116,
+    "district": "Vellore",
+    "category": "roads",
+    "report_count": 5,
+    "signal_count": 2,
+    "urgency": 0.432
+  },
+  {
+    "lgd_district_code": 117,
+    "district": "Saran",
+    "category": "power",
+    "report_count": 10,
+    "signal_count": 1,
+    "urgency": 0.213
+  },
+  {
+    "lgd_district_code": 119,
+    "district": "Rohtas",
+    "category": "public_safety",
+    "report_count": 11,
+    "signal_count": 1,
+    "urgency": 0.419
+  },
+  {
+    "lgd_district_code": 121,
+    "district": "Mumbai Suburban",
+    "category": "health",
+    "report_count": 87,
+    "signal_count": 11,
+    "urgency": 0.97
+  },
+  {
+    "lgd_district_code": 121,
+    "district": "Mumbai Suburban",
+    "category": "other",
+    "report_count": 7,
+    "signal_count": 7,
+    "urgency": 0.29
+  },
+  {
+    "lgd_district_code": 122,
+    "district": "Pune",
+    "category": "roads",
+    "report_count": 91,
+    "signal_count": 10,
+    "urgency": 0.38
+  },
+  {
+    "lgd_district_code": 123,
+    "district": "Nagpur",
+    "category": "other",
+    "report_count": 5,
+    "signal_count": 5,
+    "urgency": 0.29
+  },
+  {
+    "lgd_district_code": 124,
+    "district": "Thane",
+    "category": "other",
+    "report_count": 10,
+    "signal_count": 9,
+    "urgency": 0.29
+  },
+  {
+    "lgd_district_code": 125,
+    "district": "Nashik",
+    "category": "education",
+    "report_count": 68,
+    "signal_count": 9,
+    "urgency": 0.35
+  },
+  {
+    "lgd_district_code": 125,
+    "district": "Nashik",
+    "category": "other",
+    "report_count": 7,
+    "signal_count": 7,
+    "urgency": 0.79
+  },
+  {
+    "lgd_district_code": 125,
+    "district": "Nashik",
+    "category": "roads",
+    "report_count": 6,
+    "signal_count": 1,
+    "urgency": 0.367
+  },
+  {
+    "lgd_district_code": 125,
+    "district": "Salem",
+    "category": "other",
+    "report_count": 4,
+    "signal_count": 2,
+    "urgency": 0.093
+  },
+  {
+    "lgd_district_code": 126,
+    "district": "Chhatrapati Sambhajinagar",
+    "category": "education",
+    "report_count": 113,
+    "signal_count": 20,
+    "urgency": 0.35
+  },
+  {
+    "lgd_district_code": 126,
+    "district": "Chhatrapati Sambhajinagar",
+    "category": "health",
+    "report_count": 16,
+    "signal_count": 13,
+    "urgency": 0.97
+  },
+  {
+    "lgd_district_code": 126,
+    "district": "Chhatrapati Sambhajinagar",
+    "category": "other",
+    "report_count": 30,
+    "signal_count": 21,
+    "urgency": 0.79
+  },
+  {
+    "lgd_district_code": 126,
+    "district": "Chhatrapati Sambhajinagar",
+    "category": "power",
+    "report_count": 102,
+    "signal_count": 29,
+    "urgency": 0.85
+  },
+  {
+    "lgd_district_code": 126,
+    "district": "Chhatrapati Sambhajinagar",
+    "category": "public_safety",
+    "report_count": 19,
+    "signal_count": 13,
+    "urgency": 0.5
+  },
+  {
+    "lgd_district_code": 126,
+    "district": "Chhatrapati Sambhajinagar",
+    "category": "roads",
+    "report_count": 30,
+    "signal_count": 14,
+    "urgency": 0.432
+  },
+  {
+    "lgd_district_code": 126,
+    "district": "Chhatrapati Sambhajinagar",
+    "category": "water_sanitation",
+    "report_count": 18,
+    "signal_count": 10,
+    "urgency": 0.743
+  },
+  {
+    "lgd_district_code": 126,
+    "district": "Dindigul",
+    "category": "roads",
+    "report_count": 4,
+    "signal_count": 2,
+    "urgency": 0.683
+  },
+  {
+    "lgd_district_code": 126,
+    "district": "Nanded",
+    "category": "water_sanitation",
+    "report_count": 4,
+    "signal_count": 2,
+    "urgency": 0.492
+  },
+  {
+    "lgd_district_code": 126,
+    "district": "UNKNOWN",
+    "category": "health",
+    "report_count": 4,
+    "signal_count": 1,
+    "urgency": 0.679
+  },
+  {
+    "lgd_district_code": 126,
+    "district": "UNKNOWN",
+    "category": "public_safety",
+    "report_count": 3,
+    "signal_count": 1,
+    "urgency": 0.226
+  },
+  {
+    "lgd_district_code": 126,
+    "district": "UNKNOWN",
+    "category": "roads",
+    "report_count": 6,
+    "signal_count": 2,
+    "urgency": 0.187
+  },
+  {
+    "lgd_district_code": 127,
+    "district": "Solapur",
+    "category": "other",
+    "report_count": 8,
+    "signal_count": 7,
+    "urgency": 0.29
+  },
+  {
+    "lgd_district_code": 127,
+    "district": "Solapur",
+    "category": "public_safety",
+    "report_count": 71,
+    "signal_count": 11,
+    "urgency": 0.41
+  },
+  {
+    "lgd_district_code": 127,
+    "district": "Solapur",
+    "category": "water_sanitation",
+    "report_count": 60,
+    "signal_count": 8,
+    "urgency": 0.44
+  },
+  {
+    "lgd_district_code": 128,
+    "district": "Amravati",
+    "category": "other",
+    "report_count": 3,
+    "signal_count": 3,
+    "urgency": 0.29
+  },
+  {
+    "lgd_district_code": 128,
+    "district": "Amravati",
+    "category": "power",
+    "report_count": 107,
+    "signal_count": 10,
+    "urgency": 0.35
+  },
+  {
+    "lgd_district_code": 128,
+    "district": "Amravati",
+    "category": "public_safety",
+    "report_count": 10,
+    "signal_count": 1,
+    "urgency": 0.288
+  },
+  {
+    "lgd_district_code": 128,
+    "district": "Sivaganga",
+    "category": "public_safety",
+    "report_count": 4,
+    "signal_count": 2,
+    "urgency": 0.219
+  },
+  {
+    "lgd_district_code": 129,
+    "district": "Kolhapur",
+    "category": "health",
+    "report_count": 8,
+    "signal_count": 1,
+    "urgency": 0.465
+  },
+  {
+    "lgd_district_code": 129,
+    "district": "Kolhapur",
+    "category": "other",
+    "report_count": 4,
+    "signal_count": 4,
+    "urgency": 0.79
+  },
+  {
+    "lgd_district_code": 129,
+    "district": "Kolhapur",
+    "category": "public_safety",
+    "report_count": 11,
+    "signal_count": 1,
+    "urgency": 0.294
+  },
+  {
+    "lgd_district_code": 130,
+    "district": "Chandrapur",
+    "category": "roads",
+    "report_count": 6,
+    "signal_count": 3,
+    "urgency": 0.187
+  },
+  {
+    "lgd_district_code": 130,
+    "district": "Dindigul",
+    "category": "roads",
+    "report_count": 13,
+    "signal_count": 6,
+    "urgency": 0.35
+  },
+  {
+    "lgd_district_code": 130,
+    "district": "Erode",
+    "category": "water_sanitation",
+    "report_count": 4,
+    "signal_count": 2,
+    "urgency": 0.498
+  },
+  {
+    "lgd_district_code": 130,
+    "district": "Jabalpur",
+    "category": "water_sanitation",
+    "report_count": 7,
+    "signal_count": 3,
+    "urgency": 0.494
+  },
+  {
+    "lgd_district_code": 130,
+    "district": "Latur",
+    "category": "education",
+    "report_count": 6,
+    "signal_count": 6,
+    "urgency": 0.35
+  },
+  {
+    "lgd_district_code": 130,
+    "district": "Latur",
+    "category": "health",
+    "report_count": 29,
+    "signal_count": 17,
+    "urgency": 0.97
+  },
+  {
+    "lgd_district_code": 130,
+    "district": "Latur",
+    "category": "other",
+    "report_count": 18,
+    "signal_count": 17,
+    "urgency": 0.79
+  },
+  {
+    "lgd_district_code": 130,
+    "district": "Latur",
+    "category": "power",
+    "report_count": 11,
+    "signal_count": 8,
+    "urgency": 0.85
+  },
+  {
+    "lgd_district_code": 130,
+    "district": "Latur",
+    "category": "public_safety",
+    "report_count": 76,
+    "signal_count": 18,
+    "urgency": 0.41
+  },
+  {
+    "lgd_district_code": 130,
+    "district": "Latur",
+    "category": "roads",
+    "report_count": 108,
+    "signal_count": 14,
+    "urgency": 0.88
+  },
+  {
+    "lgd_district_code": 130,
+    "district": "Latur",
+    "category": "water_sanitation",
+    "report_count": 45,
+    "signal_count": 21,
+    "urgency": 0.94
+  },
+  {
+    "lgd_district_code": 130,
+    "district": "UNKNOWN",
+    "category": "power",
+    "report_count": 9,
+    "signal_count": 2,
+    "urgency": 0.334
+  },
+  {
+    "lgd_district_code": 130,
+    "district": "UNKNOWN",
+    "category": "public_safety",
+    "report_count": 7,
+    "signal_count": 1,
+    "urgency": 0.324
+  },
+  {
+    "lgd_district_code": 130,
+    "district": "UNKNOWN",
+    "category": "roads",
+    "report_count": 5,
+    "signal_count": 2,
+    "urgency": 0.349
+  },
+  {
+    "lgd_district_code": 130,
+    "district": "UNKNOWN",
+    "category": "water_sanitation",
+    "report_count": 4,
+    "signal_count": 1,
+    "urgency": 0.254
+  },
+  {
+    "lgd_district_code": 131,
+    "district": "Jabalpur",
+    "category": "power",
+    "report_count": 12,
+    "signal_count": 6,
+    "urgency": 0.403
+  },
+  {
+    "lgd_district_code": 131,
+    "district": "Yavatmal",
+    "category": "health",
+    "report_count": 142,
+    "signal_count": 64,
+    "urgency": 0.97
+  },
+  {
+    "lgd_district_code": 131,
+    "district": "Yavatmal",
+    "category": "other",
+    "report_count": 6,
+    "signal_count": 6,
+    "urgency": 0.79
+  },
+  {
+    "lgd_district_code": 132,
+    "district": "Chandrapur",
+    "category": "roads",
+    "report_count": 5,
+    "signal_count": 2,
+    "urgency": 0.195
+  },
+  {
+    "lgd_district_code": 132,
+    "district": "Dindigul",
+    "category": "roads",
+    "report_count": 4,
+    "signal_count": 2,
+    "urgency": 0.184
+  },
+  {
+    "lgd_district_code": 132,
+    "district": "Koraput",
+    "category": "roads",
+    "report_count": 4,
+    "signal_count": 2,
+    "urgency": 0.183
+  },
+  {
+    "lgd_district_code": 132,
+    "district": "Nanded",
+    "category": "education",
+    "report_count": 17,
+    "signal_count": 11,
+    "urgency": 0.35
+  },
+  {
+    "lgd_district_code": 132,
+    "district": "Nanded",
+    "category": "health",
+    "report_count": 23,
+    "signal_count": 21,
+    "urgency": 0.97
+  },
+  {
+    "lgd_district_code": 132,
+    "district": "Nanded",
+    "category": "other",
+    "report_count": 30,
+    "signal_count": 25,
+    "urgency": 0.79
+  },
+  {
+    "lgd_district_code": 132,
+    "district": "Nanded",
+    "category": "power",
+    "report_count": 22,
+    "signal_count": 17,
+    "urgency": 0.85
+  },
+  {
+    "lgd_district_code": 132,
+    "district": "Nanded",
+    "category": "public_safety",
+    "report_count": 10,
+    "signal_count": 8,
+    "urgency": 0.41
+  },
+  {
+    "lgd_district_code": 132,
+    "district": "Nanded",
+    "category": "roads",
+    "report_count": 23,
+    "signal_count": 12,
+    "urgency": 0.38
+  },
+  {
+    "lgd_district_code": 132,
+    "district": "Nanded",
+    "category": "water_sanitation",
+    "report_count": 25,
+    "signal_count": 11,
+    "urgency": 0.746
+  },
+  {
+    "lgd_district_code": 132,
+    "district": "UNKNOWN",
+    "category": "roads",
+    "report_count": 5,
+    "signal_count": 2,
+    "urgency": 0.387
+  },
+  {
+    "lgd_district_code": 133,
+    "district": "Bharatpur",
+    "category": "roads",
+    "report_count": 4,
+    "signal_count": 2,
+    "urgency": 0.182
+  },
+  {
+    "lgd_district_code": 133,
+    "district": "Dindigul",
+    "category": "roads",
+    "report_count": 5,
+    "signal_count": 2,
+    "urgency": 0.19
+  },
+  {
+    "lgd_district_code": 133,
+    "district": "Koraput",
+    "category": "roads",
+    "report_count": 7,
+    "signal_count": 2,
+    "urgency": 0.19
+  },
+  {
+    "lgd_district_code": 133,
+    "district": "Raigad",
+    "category": "education",
+    "report_count": 82,
+    "signal_count": 17,
+    "urgency": 0.35
+  },
+  {
+    "lgd_district_code": 133,
+    "district": "Raigad",
+    "category": "health",
+    "report_count": 105,
+    "signal_count": 19,
+    "urgency": 0.97
+  },
+  {
+    "lgd_district_code": 133,
+    "district": "Raigad",
+    "category": "other",
+    "report_count": 33,
+    "signal_count": 26,
+    "urgency": 0.79
+  },
+  {
+    "lgd_district_code": 133,
+    "district": "Raigad",
+    "category": "power",
+    "report_count": 28,
+    "signal_count": 18,
+    "urgency": 0.385
+  },
+  {
+    "lgd_district_code": 133,
+    "district": "Raigad",
+    "category": "public_safety",
+    "report_count": 8,
+    "signal_count": 8,
+    "urgency": 0.41
+  },
+  {
+    "lgd_district_code": 133,
+    "district": "Raigad",
+    "category": "roads",
+    "report_count": 21,
+    "signal_count": 9,
+    "urgency": 0.689
+  },
+  {
+    "lgd_district_code": 133,
+    "district": "Raigad",
+    "category": "water_sanitation",
+    "report_count": 96,
+    "signal_count": 16,
+    "urgency": 0.493
+  },
+  {
+    "lgd_district_code": 133,
+    "district": "Sivaganga",
+    "category": "water_sanitation",
+    "report_count": 10,
+    "signal_count": 5,
+    "urgency": 0.243
+  },
+  {
+    "lgd_district_code": 133,
+    "district": "UNKNOWN",
+    "category": "education",
+    "report_count": 8,
+    "signal_count": 1,
+    "urgency": 0.248
+  },
+  {
+    "lgd_district_code": 133,
+    "district": "UNKNOWN",
+    "category": "other",
+    "report_count": 4,
+    "signal_count": 1,
+    "urgency": 0.353
+  },
+  {
+    "lgd_district_code": 133,
+    "district": "UNKNOWN",
+    "category": "power",
+    "report_count": 3,
+    "signal_count": 1,
+    "urgency": 0.181
+  },
+  {
+    "lgd_district_code": 134,
+    "district": "Chandrapur",
+    "category": "education",
+    "report_count": 6,
+    "signal_count": 6,
+    "urgency": 0.85
+  },
+  {
+    "lgd_district_code": 134,
+    "district": "Chandrapur",
+    "category": "health",
+    "report_count": 93,
+    "signal_count": 23,
+    "urgency": 0.97
+  },
+  {
+    "lgd_district_code": 134,
+    "district": "Chandrapur",
+    "category": "other",
+    "report_count": 22,
+    "signal_count": 18,
+    "urgency": 0.29
+  },
+  {
+    "lgd_district_code": 134,
+    "district": "Chandrapur",
+    "category": "power",
+    "report_count": 19,
+    "signal_count": 16,
+    "urgency": 0.85
+  },
+  {
+    "lgd_district_code": 134,
+    "district": "Chandrapur",
+    "category": "public_safety",
+    "report_count": 21,
+    "signal_count": 16,
+    "urgency": 0.91
+  },
+  {
+    "lgd_district_code": 134,
+    "district": "Chandrapur",
+    "category": "roads",
+    "report_count": 26,
+    "signal_count": 13,
+    "urgency": 0.447
+  },
+  {
+    "lgd_district_code": 134,
+    "district": "Chandrapur",
+    "category": "water_sanitation",
+    "report_count": 31,
+    "signal_count": 17,
+    "urgency": 0.537
+  },
+  {
+    "lgd_district_code": 134,
+    "district": "Erode",
+    "category": "water_sanitation",
+    "report_count": 4,
+    "signal_count": 2,
+    "urgency": 0.244
+  },
+  {
+    "lgd_district_code": 134,
+    "district": "Jabalpur",
+    "category": "water_sanitation",
+    "report_count": 4,
+    "signal_count": 2,
+    "urgency": 0.493
+  },
+  {
+    "lgd_district_code": 135,
+    "district": "Satara",
+    "category": "other",
+    "report_count": 10,
+    "signal_count": 10,
+    "urgency": 0.29
+  },
+  {
+    "lgd_district_code": 135,
+    "district": "Satara",
+    "category": "power",
+    "report_count": 73,
+    "signal_count": 12,
+    "urgency": 0.35
+  },
+  {
+    "lgd_district_code": 135,
+    "district": "Satara",
+    "category": "public_safety",
+    "report_count": 95,
+    "signal_count": 12,
+    "urgency": 0.447
+  },
+  {
+    "lgd_district_code": 135,
+    "district": "Satara",
+    "category": "roads",
+    "report_count": 75,
+    "signal_count": 5,
+    "urgency": 0.275
+  },
+  {
+    "lgd_district_code": 135,
+    "district": "Satara",
+    "category": "water_sanitation",
+    "report_count": 72,
+    "signal_count": 14,
+    "urgency": 0.44
+  },
+  {
+    "lgd_district_code": 136,
+    "district": "Chennai",
+    "category": "education",
+    "report_count": 17,
+    "signal_count": 1,
+    "urgency": 0.379
+  },
+  {
+    "lgd_district_code": 136,
+    "district": "Chennai",
+    "category": "other",
+    "report_count": 8,
+    "signal_count": 8,
+    "urgency": 0.29
+  },
+  {
+    "lgd_district_code": 137,
+    "district": "Coimbatore",
+    "category": "other",
+    "report_count": 3,
+    "signal_count": 3,
+    "urgency": 0.79
+  },
+  {
+    "lgd_district_code": 137,
+    "district": "Coimbatore",
+    "category": "roads",
+    "report_count": 85,
+    "signal_count": 8,
+    "urgency": 0.38
+  },
+  {
+    "lgd_district_code": 138,
+    "district": "Jabalpur",
+    "category": "power",
+    "report_count": 6,
+    "signal_count": 3,
+    "urgency": 0.164
+  },
+  {
+    "lgd_district_code": 138,
+    "district": "Madurai",
+    "category": "other",
+    "report_count": 5,
+    "signal_count": 5,
+    "urgency": 0.29
+  },
+  {
+    "lgd_district_code": 138,
+    "district": "Madurai",
+    "category": "power",
+    "report_count": 77,
+    "signal_count": 47,
+    "urgency": 0.85
+  },
+  {
+    "lgd_district_code": 139,
+    "district": "Tiruchirappalli",
+    "category": "other",
+    "report_count": 3,
+    "signal_count": 3,
+    "urgency": 0.29
+  },
+  {
+    "lgd_district_code": 140,
+    "district": "Salem",
+    "category": "education",
+    "report_count": 75,
+    "signal_count": 54,
+    "urgency": 0.85
+  },
+  {
+    "lgd_district_code": 140,
+    "district": "Salem",
+    "category": "health",
+    "report_count": 12,
+    "signal_count": 9,
+    "urgency": 0.97
+  },
+  {
+    "lgd_district_code": 140,
+    "district": "Salem",
+    "category": "other",
+    "report_count": 22,
+    "signal_count": 18,
+    "urgency": 0.79
+  },
+  {
+    "lgd_district_code": 140,
+    "district": "Salem",
+    "category": "power",
+    "report_count": 21,
+    "signal_count": 18,
+    "urgency": 0.85
+  },
+  {
+    "lgd_district_code": 140,
+    "district": "Salem",
+    "category": "public_safety",
+    "report_count": 10,
+    "signal_count": 8,
+    "urgency": 0.91
+  },
+  {
+    "lgd_district_code": 140,
+    "district": "Salem",
+    "category": "roads",
+    "report_count": 13,
+    "signal_count": 8,
+    "urgency": 0.88
+  },
+  {
+    "lgd_district_code": 140,
+    "district": "Salem",
+    "category": "water_sanitation",
+    "report_count": 10,
+    "signal_count": 6,
+    "urgency": 0.496
+  },
+  {
+    "lgd_district_code": 140,
+    "district": "Sivaganga",
+    "category": "roads",
+    "report_count": 4,
+    "signal_count": 2,
+    "urgency": 0.183
+  },
+  {
+    "lgd_district_code": 140,
+    "district": "UNKNOWN",
+    "category": "health",
+    "report_count": 6,
+    "signal_count": 1,
+    "urgency": 0.289
+  },
+  {
+    "lgd_district_code": 140,
+    "district": "UNKNOWN",
+    "category": "power",
+    "report_count": 3,
+    "signal_count": 1,
+    "urgency": 0.169
+  },
+  {
+    "lgd_district_code": 141,
+    "district": "Tirunelveli",
+    "category": "other",
+    "report_count": 7,
+    "signal_count": 6,
+    "urgency": 0.29
+  },
+  {
+    "lgd_district_code": 142,
+    "district": "Bharatpur",
+    "category": "roads",
+    "report_count": 8,
+    "signal_count": 4,
+    "urgency": 0.189
+  },
+  {
+    "lgd_district_code": 142,
+    "district": "Erode",
+    "category": "education",
+    "report_count": 113,
+    "signal_count": 13,
+    "urgency": 0.381
+  },
+  {
+    "lgd_district_code": 142,
+    "district": "Erode",
+    "category": "health",
+    "report_count": 14,
+    "signal_count": 12,
+    "urgency": 0.97
+  },
+  {
+    "lgd_district_code": 142,
+    "district": "Erode",
+    "category": "other",
+    "report_count": 25,
+    "signal_count": 19,
+    "urgency": 0.79
+  },
+  {
+    "lgd_district_code": 142,
+    "district": "Erode",
+    "category": "power",
+    "report_count": 30,
+    "signal_count": 22,
+    "urgency": 0.35
+  },
+  {
+    "lgd_district_code": 142,
+    "district": "Erode",
+    "category": "public_safety",
+    "report_count": 11,
+    "signal_count": 9,
+    "urgency": 0.41
+  },
+  {
+    "lgd_district_code": 142,
+    "district": "Erode",
+    "category": "roads",
+    "report_count": 25,
+    "signal_count": 11,
+    "urgency": 0.38
+  },
+  {
+    "lgd_district_code": 142,
+    "district": "Erode",
+    "category": "water_sanitation",
+    "report_count": 79,
+    "signal_count": 12,
+    "urgency": 0.511
+  },
+  {
+    "lgd_district_code": 142,
+    "district": "Koraput",
+    "category": "water_sanitation",
+    "report_count": 6,
+    "signal_count": 3,
+    "urgency": 0.492
+  },
+  {
+    "lgd_district_code": 142,
+    "district": "UNKNOWN",
+    "category": "water_sanitation",
+    "report_count": 3,
+    "signal_count": 1,
+    "urgency": 0.259
+  },
+  {
+    "lgd_district_code": 143,
+    "district": "Bharatpur",
+    "category": "roads",
+    "report_count": 4,
+    "signal_count": 2,
+    "urgency": 0.183
+  },
+  {
+    "lgd_district_code": 143,
+    "district": "Dindigul",
+    "category": "roads",
+    "report_count": 3,
+    "signal_count": 1,
+    "urgency": 0.206
+  },
+  {
+    "lgd_district_code": 143,
+    "district": "Sivaganga",
+    "category": "water_sanitation",
+    "report_count": 4,
+    "signal_count": 2,
+    "urgency": 0.243
+  },
+  {
+    "lgd_district_code": 143,
+    "district": "UNKNOWN",
+    "category": "health",
+    "report_count": 6,
+    "signal_count": 2,
+    "urgency": 0.469
+  },
+  {
+    "lgd_district_code": 143,
+    "district": "UNKNOWN",
+    "category": "power",
+    "report_count": 4,
+    "signal_count": 1,
+    "urgency": 0.19
+  },
+  {
+    "lgd_district_code": 143,
+    "district": "UNKNOWN",
+    "category": "roads",
+    "report_count": 6,
+    "signal_count": 2,
+    "urgency": 0.188
+  },
+  {
+    "lgd_district_code": 143,
+    "district": "Vellore",
+    "category": "education",
+    "report_count": 88,
+    "signal_count": 19,
+    "urgency": 0.35
+  },
+  {
+    "lgd_district_code": 143,
+    "district": "Vellore",
+    "category": "health",
+    "report_count": 27,
+    "signal_count": 12,
+    "urgency": 0.97
+  },
+  {
+    "lgd_district_code": 143,
+    "district": "Vellore",
+    "category": "other",
+    "report_count": 20,
+    "signal_count": 14,
+    "urgency": 0.79
+  },
+  {
+    "lgd_district_code": 143,
+    "district": "Vellore",
+    "category": "power",
+    "report_count": 112,
+    "signal_count": 20,
+    "urgency": 0.85
+  },
+  {
+    "lgd_district_code": 143,
+    "district": "Vellore",
+    "category": "public_safety",
+    "report_count": 17,
+    "signal_count": 10,
+    "urgency": 0.41
+  },
+  {
+    "lgd_district_code": 143,
+    "district": "Vellore",
+    "category": "roads",
+    "report_count": 10,
+    "signal_count": 5,
+    "urgency": 0.38
+  },
+  {
+    "lgd_district_code": 143,
+    "district": "Vellore",
+    "category": "water_sanitation",
+    "report_count": 18,
+    "signal_count": 8,
+    "urgency": 0.492
+  },
+  {
+    "lgd_district_code": 144,
+    "district": "Dindigul",
+    "category": "water_sanitation",
+    "report_count": 3,
+    "signal_count": 1,
+    "urgency": 0.243
+  },
+  {
+    "lgd_district_code": 144,
+    "district": "Thanjavur",
+    "category": "other",
+    "report_count": 3,
+    "signal_count": 3,
+    "urgency": 0.29
+  },
+  {
+    "lgd_district_code": 144,
+    "district": "Thanjavur",
+    "category": "public_safety",
+    "report_count": 76,
+    "signal_count": 7,
+    "urgency": 0.41
+  },
+  {
+    "lgd_district_code": 144,
+    "district": "Thanjavur",
+    "category": "water_sanitation",
+    "report_count": 70,
+    "signal_count": 8,
+    "urgency": 0.44
+  },
+  {
+    "lgd_district_code": 145,
+    "district": "Tiruvannamalai",
+    "category": "other",
+    "report_count": 13,
+    "signal_count": 5,
+    "urgency": 0.79
+  },
+  {
+    "lgd_district_code": 145,
+    "district": "Tiruvannamalai",
+    "category": "power",
+    "report_count": 95,
+    "signal_count": 10,
+    "urgency": 0.451
+  },
+  {
+    "lgd_district_code": 146,
+    "district": "Bharatpur",
+    "category": "roads",
+    "report_count": 6,
+    "signal_count": 3,
+    "urgency": 0.184
+  },
+  {
+    "lgd_district_code": 146,
+    "district": "Dindigul",
+    "category": "education",
+    "report_count": 17,
+    "signal_count": 12,
+    "urgency": 0.85
+  },
+  {
+    "lgd_district_code": 146,
+    "district": "Dindigul",
+    "category": "health",
+    "report_count": 15,
+    "signal_count": 15,
+    "urgency": 0.97
+  },
+  {
+    "lgd_district_code": 146,
+    "district": "Dindigul",
+    "category": "other",
+    "report_count": 10,
+    "signal_count": 10,
+    "urgency": 0.79
+  },
+  {
+    "lgd_district_code": 146,
+    "district": "Dindigul",
+    "category": "power",
+    "report_count": 103,
+    "signal_count": 22,
+    "urgency": 0.85
+  },
+  {
+    "lgd_district_code": 146,
+    "district": "Dindigul",
+    "category": "public_safety",
+    "report_count": 19,
+    "signal_count": 16,
+    "urgency": 0.91
+  },
+  {
+    "lgd_district_code": 146,
+    "district": "Dindigul",
+    "category": "roads",
+    "report_count": 6,
+    "signal_count": 4,
+    "urgency": 0.88
+  },
+  {
+    "lgd_district_code": 146,
+    "district": "Dindigul",
+    "category": "water_sanitation",
+    "report_count": 15,
+    "signal_count": 10,
+    "urgency": 0.94
+  },
+  {
+    "lgd_district_code": 146,
+    "district": "Koraput",
+    "category": "water_sanitation",
+    "report_count": 6,
+    "signal_count": 3,
+    "urgency": 0.492
+  },
+  {
+    "lgd_district_code": 146,
+    "district": "Sivaganga",
+    "category": "water_sanitation",
+    "report_count": 4,
+    "signal_count": 2,
+    "urgency": 0.249
+  },
+  {
+    "lgd_district_code": 146,
+    "district": "UNKNOWN",
+    "category": "other",
+    "report_count": 5,
+    "signal_count": 2,
+    "urgency": 0.103
+  },
+  {
+    "lgd_district_code": 146,
+    "district": "UNKNOWN",
+    "category": "roads",
+    "report_count": 10,
+    "signal_count": 2,
+    "urgency": 0.277
+  },
+  {
+    "lgd_district_code": 146,
+    "district": "UNKNOWN",
+    "category": "water_sanitation",
+    "report_count": 4,
+    "signal_count": 1,
+    "urgency": 0.378
+  },
+  {
+    "lgd_district_code": 147,
+    "district": "Cuddalore",
+    "category": "other",
+    "report_count": 7,
+    "signal_count": 5,
+    "urgency": 0.79
+  },
+  {
+    "lgd_district_code": 147,
+    "district": "Cuddalore",
+    "category": "public_safety",
+    "report_count": 48,
+    "signal_count": 6,
+    "urgency": 0.562
+  },
+  {
+    "lgd_district_code": 147,
+    "district": "Cuddalore",
+    "category": "roads",
+    "report_count": 121,
+    "signal_count": 11,
+    "urgency": 0.38
+  },
+  {
+    "lgd_district_code": 147,
+    "district": "UNKNOWN",
+    "category": "power",
+    "report_count": 9,
+    "signal_count": 1,
+    "urgency": 0.167
+  },
+  {
+    "lgd_district_code": 148,
+    "district": "Nagapattinam",
+    "category": "health",
+    "report_count": 75,
+    "signal_count": 7,
+    "urgency": 0.47
+  },
+  {
+    "lgd_district_code": 148,
+    "district": "Nagapattinam",
+    "category": "other",
+    "report_count": 4,
+    "signal_count": 4,
+    "urgency": 0.79
+  },
+  {
+    "lgd_district_code": 148,
+    "district": "Nagapattinam",
+    "category": "power",
+    "report_count": 6,
+    "signal_count": 1,
+    "urgency": 0.35
+  },
+  {
+    "lgd_district_code": 148,
+    "district": "Nagapattinam",
+    "category": "public_safety",
+    "report_count": 95,
+    "signal_count": 8,
+    "urgency": 0.577
+  },
+  {
+    "lgd_district_code": 149,
+    "district": "Cuttack",
+    "category": "power",
+    "report_count": 7,
+    "signal_count": 3,
+    "urgency": 0.153
+  },
+  {
+    "lgd_district_code": 149,
+    "district": "Sivaganga",
+    "category": "education",
+    "report_count": 119,
+    "signal_count": 22,
+    "urgency": 0.85
+  },
+  {
+    "lgd_district_code": 149,
+    "district": "Sivaganga",
+    "category": "health",
+    "report_count": 112,
+    "signal_count": 23,
+    "urgency": 0.97
+  },
+  {
+    "lgd_district_code": 149,
+    "district": "Sivaganga",
+    "category": "other",
+    "report_count": 20,
+    "signal_count": 18,
+    "urgency": 0.79
+  },
+  {
+    "lgd_district_code": 149,
+    "district": "Sivaganga",
+    "category": "power",
+    "report_count": 17,
+    "signal_count": 14,
+    "urgency": 0.35
+  },
+  {
+    "lgd_district_code": 149,
+    "district": "Sivaganga",
+    "category": "public_safety",
+    "report_count": 8,
+    "signal_count": 8,
+    "urgency": 0.91
+  },
+  {
+    "lgd_district_code": 149,
+    "district": "Sivaganga",
+    "category": "roads",
+    "report_count": 27,
+    "signal_count": 13,
+    "urgency": 0.435
+  },
+  {
+    "lgd_district_code": 149,
+    "district": "Sivaganga",
+    "category": "water_sanitation",
+    "report_count": 5,
+    "signal_count": 2,
+    "urgency": 0.576
+  },
+  {
+    "lgd_district_code": 149,
+    "district": "UNKNOWN",
+    "category": "roads",
+    "report_count": 3,
+    "signal_count": 1,
+    "urgency": 0.351
+  },
+  {
+    "lgd_district_code": 150,
+    "district": "UNKNOWN",
+    "category": "roads",
+    "report_count": 3,
+    "signal_count": 1,
+    "urgency": 0.361
+  },
+  {
+    "lgd_district_code": 150,
+    "district": "Virudhunagar",
+    "category": "health",
+    "report_count": 83,
+    "signal_count": 7,
+    "urgency": 0.474
+  },
+  {
+    "lgd_district_code": 150,
+    "district": "Virudhunagar",
+    "category": "other",
+    "report_count": 6,
+    "signal_count": 6,
+    "urgency": 0.29
+  },
+  {
+    "lgd_district_code": 150,
+    "district": "Virudhunagar",
+    "category": "roads",
+    "report_count": 68,
+    "signal_count": 6,
+    "urgency": 0.38
+  },
+  {
+    "lgd_district_code": 150,
+    "district": "Virudhunagar",
+    "category": "water_sanitation",
+    "report_count": 73,
+    "signal_count": 8,
+    "urgency": 0.44
+  },
+  {
+    "lgd_district_code": 151,
+    "district": "Bhopal",
+    "category": "public_safety",
+    "report_count": 4,
+    "signal_count": 1,
+    "urgency": 0.285
+  },
+  {
+    "lgd_district_code": 151,
+    "district": "UNKNOWN",
+    "category": "roads",
+    "report_count": 9,
+    "signal_count": 1,
+    "urgency": 0.342
+  },
+  {
+    "lgd_district_code": 153,
+    "district": "Cuttack",
+    "category": "roads",
+    "report_count": 4,
+    "signal_count": 2,
+    "urgency": 0.433
+  },
+  {
+    "lgd_district_code": 153,
+    "district": "Jabalpur",
+    "category": "education",
+    "report_count": 12,
+    "signal_count": 10,
+    "urgency": 0.35
+  },
+  {
+    "lgd_district_code": 153,
+    "district": "Jabalpur",
+    "category": "health",
+    "report_count": 14,
+    "signal_count": 12,
+    "urgency": 0.97
+  },
+  {
+    "lgd_district_code": 153,
+    "district": "Jabalpur",
+    "category": "other",
+    "report_count": 18,
+    "signal_count": 12,
+    "urgency": 0.377
+  },
+  {
+    "lgd_district_code": 153,
+    "district": "Jabalpur",
+    "category": "power",
+    "report_count": 7,
+    "signal_count": 3,
+    "urgency": 0.85
+  },
+  {
+    "lgd_district_code": 153,
+    "district": "Jabalpur",
+    "category": "public_safety",
+    "report_count": 141,
+    "signal_count": 23,
+    "urgency": 0.91
+  },
+  {
+    "lgd_district_code": 153,
+    "district": "Jabalpur",
+    "category": "water_sanitation",
+    "report_count": 12,
+    "signal_count": 5,
+    "urgency": 0.94
+  },
+  {
+    "lgd_district_code": 154,
+    "district": "Gwalior",
+    "category": "roads",
+    "report_count": 11,
+    "signal_count": 1,
+    "urgency": 0.351
+  },
+  {
+    "lgd_district_code": 155,
+    "district": "Ujjain",
+    "category": "health",
+    "report_count": 12,
+    "signal_count": 1,
+    "urgency": 0.512
+  },
+  {
+    "lgd_district_code": 156,
+    "district": "Sagar",
+    "category": "power",
+    "report_count": 6,
+    "signal_count": 1,
+    "urgency": 0.517
+  },
+  {
+    "lgd_district_code": 156,
+    "district": "Sagar",
+    "category": "water_sanitation",
+    "report_count": 12,
+    "signal_count": 1,
+    "urgency": 0.387
+  },
+  {
+    "lgd_district_code": 158,
+    "district": "Satna",
+    "category": "roads",
+    "report_count": 10,
+    "signal_count": 1,
+    "urgency": 0.397
+  },
+  {
+    "lgd_district_code": 162,
+    "district": "Jodhpur",
+    "category": "roads",
+    "report_count": 85,
+    "signal_count": 12,
+    "urgency": 0.63
+  },
+  {
+    "lgd_district_code": 164,
+    "district": "Kota",
+    "category": "water_sanitation",
+    "report_count": 13,
+    "signal_count": 1,
+    "urgency": 0.475
+  },
+  {
+    "lgd_district_code": 165,
+    "district": "Ajmer",
+    "category": "water_sanitation",
+    "report_count": 5,
+    "signal_count": 1,
+    "urgency": 0.496
+  },
+  {
+    "lgd_district_code": 166,
+    "district": "Bikaner",
+    "category": "roads",
+    "report_count": 21,
+    "signal_count": 1,
+    "urgency": 0.462
+  },
+  {
+    "lgd_district_code": 167,
+    "district": "Alwar",
+    "category": "power",
+    "report_count": 12,
+    "signal_count": 1,
+    "urgency": 0.369
+  },
+  {
+    "lgd_district_code": 167,
+    "district": "Alwar",
+    "category": "water_sanitation",
+    "report_count": 7,
+    "signal_count": 1,
+    "urgency": 0.397
+  },
+  {
+    "lgd_district_code": 168,
+    "district": "Bharatpur",
+    "category": "education",
+    "report_count": 13,
+    "signal_count": 13,
+    "urgency": 0.85
+  },
+  {
+    "lgd_district_code": 168,
+    "district": "Bharatpur",
+    "category": "health",
+    "report_count": 14,
+    "signal_count": 12,
+    "urgency": 0.97
+  },
+  {
+    "lgd_district_code": 168,
+    "district": "Bharatpur",
+    "category": "other",
+    "report_count": 15,
+    "signal_count": 13,
+    "urgency": 0.29
+  },
+  {
+    "lgd_district_code": 168,
+    "district": "Bharatpur",
+    "category": "power",
+    "report_count": 21,
+    "signal_count": 17,
+    "urgency": 0.85
+  },
+  {
+    "lgd_district_code": 168,
+    "district": "Bharatpur",
+    "category": "public_safety",
+    "report_count": 10,
+    "signal_count": 7,
+    "urgency": 0.91
+  },
+  {
+    "lgd_district_code": 168,
+    "district": "Bharatpur",
+    "category": "water_sanitation",
+    "report_count": 19,
+    "signal_count": 8,
+    "urgency": 0.493
+  },
+  {
+    "lgd_district_code": 168,
+    "district": "Cuttack",
+    "category": "roads",
+    "report_count": 7,
+    "signal_count": 3,
+    "urgency": 0.437
+  },
+  {
+    "lgd_district_code": 168,
+    "district": "UNKNOWN",
+    "category": "education",
+    "report_count": 7,
+    "signal_count": 1,
+    "urgency": 0.232
+  },
+  {
+    "lgd_district_code": 168,
+    "district": "UNKNOWN",
+    "category": "roads",
+    "report_count": 4,
+    "signal_count": 1,
+    "urgency": 0.187
+  },
+  {
+    "lgd_district_code": 168,
+    "district": "UNKNOWN",
+    "category": "water_sanitation",
+    "report_count": 4,
+    "signal_count": 1,
+    "urgency": 0.244
+  },
+  {
+    "lgd_district_code": 169,
+    "district": "Sikar",
+    "category": "roads",
+    "report_count": 81,
+    "signal_count": 9,
+    "urgency": 0.38
+  },
+  {
+    "lgd_district_code": 169,
+    "district": "Sikar",
+    "category": "water_sanitation",
+    "report_count": 79,
+    "signal_count": 9,
+    "urgency": 0.44
+  },
+  {
+    "lgd_district_code": 171,
+    "district": "Kolkata",
+    "category": "other",
+    "report_count": 4,
+    "signal_count": 1,
+    "urgency": 0.264
+  },
+  {
+    "lgd_district_code": 171,
+    "district": "Kolkata",
+    "category": "water_sanitation",
+    "report_count": 12,
+    "signal_count": 1,
+    "urgency": 0.262
+  },
+  {
+    "lgd_district_code": 172,
+    "district": "North 24 Parganas",
+    "category": "other",
+    "report_count": 14,
+    "signal_count": 2,
+    "urgency": 0.302
+  },
+  {
+    "lgd_district_code": 172,
+    "district": "UNKNOWN",
+    "category": "water_sanitation",
+    "report_count": 3,
+    "signal_count": 1,
+    "urgency": 0.459
+  },
+  {
+    "lgd_district_code": 174,
+    "district": "Hooghly",
+    "category": "power",
+    "report_count": 13,
+    "signal_count": 1,
+    "urgency": 0.427
+  },
+  {
+    "lgd_district_code": 175,
+    "district": "Nadia",
+    "category": "power",
+    "report_count": 17,
+    "signal_count": 1,
+    "urgency": 0.303
+  },
+  {
+    "lgd_district_code": 177,
+    "district": "Purba Bardhaman",
+    "category": "power",
+    "report_count": 8,
+    "signal_count": 1,
+    "urgency": 0.306
+  },
+  {
+    "lgd_district_code": 178,
+    "district": "Jalpaiguri",
+    "category": "health",
+    "report_count": 8,
+    "signal_count": 1,
+    "urgency": 0.805
+  },
+  {
+    "lgd_district_code": 179,
+    "district": "Bankura",
+    "category": "roads",
+    "report_count": 10,
+    "signal_count": 1,
+    "urgency": 0.38
+  },
+  {
+    "lgd_district_code": 180,
+    "district": "Medinipur",
+    "category": "health",
+    "report_count": 7,
+    "signal_count": 1,
+    "urgency": 0.491
+  },
+  {
+    "lgd_district_code": 181,
+    "district": "Bengaluru Urban",
+    "category": "public_safety",
+    "report_count": 7,
+    "signal_count": 1,
+    "urgency": 0.456
+  },
+  {
+    "lgd_district_code": 184,
+    "district": "Kalaburagi",
+    "category": "roads",
+    "report_count": 7,
+    "signal_count": 1,
+    "urgency": 0.38
+  },
+  {
+    "lgd_district_code": 186,
+    "district": "Dakshina Kannada",
+    "category": "water_sanitation",
+    "report_count": 76,
+    "signal_count": 5,
+    "urgency": 0.371
+  },
+  {
+    "lgd_district_code": 187,
+    "district": "Tumakuru",
+    "category": "public_safety",
+    "report_count": 21,
+    "signal_count": 1,
+    "urgency": 0.41
+  },
+  {
+    "lgd_district_code": 188,
+    "district": "Ballari",
+    "category": "education",
+    "report_count": 75,
+    "signal_count": 8,
+    "urgency": 0.85
+  },
+  {
+    "lgd_district_code": 188,
+    "district": "Ballari",
+    "category": "water_sanitation",
+    "report_count": 95,
+    "signal_count": 9,
+    "urgency": 0.44
+  },
+  {
+    "lgd_district_code": 189,
+    "district": "Raichur",
+    "category": "public_safety",
+    "report_count": 91,
+    "signal_count": 8,
+    "urgency": 0.399
+  },
+  {
+    "lgd_district_code": 191,
+    "district": "Khordha",
+    "category": "power",
+    "report_count": 92,
+    "signal_count": 8,
+    "urgency": 0.232
+  },
+  {
+    "lgd_district_code": 191,
+    "district": "Khordha",
+    "category": "water_sanitation",
+    "report_count": 8,
+    "signal_count": 1,
+    "urgency": 0.326
+  },
+  {
+    "lgd_district_code": 192,
+    "district": "Cuttack",
+    "category": "education",
+    "report_count": 21,
+    "signal_count": 10,
+    "urgency": 0.85
+  },
+  {
+    "lgd_district_code": 192,
+    "district": "Cuttack",
+    "category": "health",
+    "report_count": 92,
+    "signal_count": 30,
+    "urgency": 0.97
+  },
+  {
+    "lgd_district_code": 192,
+    "district": "Cuttack",
+    "category": "other",
+    "report_count": 11,
+    "signal_count": 8,
+    "urgency": 0.29
+  },
+  {
+    "lgd_district_code": 192,
+    "district": "Cuttack",
+    "category": "power",
+    "report_count": 7,
+    "signal_count": 5,
+    "urgency": 0.35
+  },
+  {
+    "lgd_district_code": 192,
+    "district": "Cuttack",
+    "category": "public_safety",
+    "report_count": 18,
+    "signal_count": 12,
+    "urgency": 0.503
+  },
+  {
+    "lgd_district_code": 192,
+    "district": "Cuttack",
+    "category": "roads",
+    "report_count": 13,
+    "signal_count": 7,
+    "urgency": 0.44
+  },
+  {
+    "lgd_district_code": 192,
+    "district": "Koraput",
+    "category": "water_sanitation",
+    "report_count": 4,
+    "signal_count": 2,
+    "urgency": 0.245
+  },
+  {
+    "lgd_district_code": 194,
+    "district": "Sambalpur",
+    "category": "education",
+    "report_count": 100,
+    "signal_count": 11,
+    "urgency": 0.35
+  },
+  {
+    "lgd_district_code": 194,
+    "district": "Sambalpur",
+    "category": "health",
+    "report_count": 8,
+    "signal_count": 1,
+    "urgency": 0.605
+  },
+  {
+    "lgd_district_code": 194,
+    "district": "Sambalpur",
+    "category": "public_safety",
+    "report_count": 15,
+    "signal_count": 1,
+    "urgency": 0.239
+  },
+  {
+    "lgd_district_code": 196,
+    "district": "Puri",
+    "category": "power",
+    "report_count": 84,
+    "signal_count": 6,
+    "urgency": 0.261
+  },
+  {
+    "lgd_district_code": 197,
+    "district": "Bolangir",
+    "category": "roads",
+    "report_count": 8,
+    "signal_count": 1,
+    "urgency": 0.38
+  },
+  {
+    "lgd_district_code": 198,
+    "district": "Koraput",
+    "category": "education",
+    "report_count": 12,
+    "signal_count": 11,
+    "urgency": 0.35
+  },
+  {
+    "lgd_district_code": 198,
+    "district": "Koraput",
+    "category": "health",
+    "report_count": 43,
+    "signal_count": 19,
+    "urgency": 0.97
+  },
+  {
+    "lgd_district_code": 198,
+    "district": "Koraput",
+    "category": "other",
+    "report_count": 13,
+    "signal_count": 13,
+    "urgency": 0.79
+  },
+  {
+    "lgd_district_code": 198,
+    "district": "Koraput",
+    "category": "power",
+    "report_count": 19,
+    "signal_count": 16,
+    "urgency": 0.85
+  },
+  {
+    "lgd_district_code": 198,
+    "district": "Koraput",
+    "category": "public_safety",
+    "report_count": 14,
+    "signal_count": 14,
+    "urgency": 0.41
+  },
+  {
+    "lgd_district_code": 198,
+    "district": "Koraput",
+    "category": "roads",
+    "report_count": 6,
+    "signal_count": 3,
+    "urgency": 0.38
+  },
+  {
+    "lgd_district_code": 198,
+    "district": "Koraput",
+    "category": "water_sanitation",
+    "report_count": 26,
+    "signal_count": 12,
+    "urgency": 0.94
+  },
+  {
+    "lgd_district_code": 198,
+    "district": "UNKNOWN",
+    "category": "health",
+    "report_count": 3,
+    "signal_count": 1,
+    "urgency": 0.483
+  },
+  {
+    "lgd_district_code": 199,
+    "district": "Kalahandi",
+    "category": "other",
+    "report_count": 4,
+    "signal_count": 1,
+    "urgency": 0.23
+  },
+  {
+    "lgd_district_code": 201,
+    "district": "Ahmedabad",
+    "category": "power",
+    "report_count": 88,
+    "signal_count": 9,
+    "urgency": 0.35
+  },
+  {
+    "lgd_district_code": 201,
+    "district": "UNKNOWN",
+    "category": "power",
+    "report_count": 3,
+    "signal_count": 1,
+    "urgency": 0.334
+  },
+  {
+    "lgd_district_code": 203,
+    "district": "Vadodara",
+    "category": "health",
+    "report_count": 68,
+    "signal_count": 8,
+    "urgency": 0.649
+  },
+  {
+    "lgd_district_code": 205,
+    "district": "Gandhinagar",
+    "category": "health",
+    "report_count": 13,
+    "signal_count": 1,
+    "urgency": 0.778
+  },
+  {
+    "lgd_district_code": 205,
+    "district": "Gandhinagar",
+    "category": "roads",
+    "report_count": 75,
+    "signal_count": 6,
+    "urgency": 0.326
+  },
+  {
+    "lgd_district_code": 209,
+    "district": "Kutch",
+    "category": "health",
+    "report_count": 68,
+    "signal_count": 8,
+    "urgency": 0.821
+  },
+  {
+    "lgd_district_code": 209,
+    "district": "Kutch",
+    "category": "water_sanitation",
+    "report_count": 14,
+    "signal_count": 1,
+    "urgency": 0.293
+  },
+  {
+    "lgd_district_code": 210,
+    "district": "Banaskantha",
+    "category": "education",
+    "report_count": 79,
+    "signal_count": 11,
+    "urgency": 0.475
+  },
+  {
+    "lgd_district_code": 213,
+    "district": "East Singhbhum",
+    "category": "power",
+    "report_count": 4,
+    "signal_count": 1,
+    "urgency": 0.243
+  },
+  {
+    "lgd_district_code": 216,
+    "district": "Giridih",
+    "category": "other",
+    "report_count": 11,
+    "signal_count": 1,
+    "urgency": 0.335
+  },
+  {
+    "lgd_district_code": 217,
+    "district": "Deoghar",
+    "category": "education",
+    "report_count": 5,
+    "signal_count": 1,
+    "urgency": 0.187
+  },
+  {
+    "lgd_district_code": 217,
+    "district": "Deoghar",
+    "category": "public_safety",
+    "report_count": 100,
+    "signal_count": 9,
+    "urgency": 0.5
+  },
+  {
+    "lgd_district_code": 217,
+    "district": "Deoghar",
+    "category": "water_sanitation",
+    "report_count": 9,
+    "signal_count": 1,
+    "urgency": 0.396
+  },
+  {
+    "lgd_district_code": 218,
+    "district": "Dumka",
+    "category": "public_safety",
+    "report_count": 5,
+    "signal_count": 1,
+    "urgency": 0.41
+  },
+  {
+    "lgd_district_code": 219,
+    "district": "Godda",
+    "category": "public_safety",
+    "report_count": 5,
+    "signal_count": 1,
+    "urgency": 0.318
+  },
+  {
+    "lgd_district_code": 220,
+    "district": "Chatra",
+    "category": "public_safety",
+    "report_count": 10,
+    "signal_count": 1,
+    "urgency": 0.24
+  }
+]

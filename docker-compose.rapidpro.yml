@@ -1,0 +1,109 @@
+# RapidPro Digital Public Good (DPG) Omnichannel Stack for VAANI
+# Runs RapidPro services (Web, Celery Worker, Mailroom, Courier, PostgreSQL, Redis)
+# Connects to WhatsApp Cloud API, Twilio/Gupshup SMS, and VAANI Cloud Run API Gateway.
+
+version: '3.8'
+
+services:
+  rapidpro-db:
+    image: postgres:15-alpine
+    container_name: vaani-rapidpro-db
+    environment:
+      POSTGRES_DB: rapidpro
+      POSTGRES_USER: rapidpro
+      POSTGRES_PASSWORD: rapidpro_secure_password_replace_in_prod
+    volumes:
+      - rapidpro_pgdata:/var/lib/postgresql/data
+    networks:
+      - vaani-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rapidpro"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rapidpro-redis:
+    image: redis:7-alpine
+    container_name: vaani-rapidpro-redis
+    networks:
+      - vaani-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rapidpro-web:
+    image: ghcr.io/rapidpro/rapidpro:v13.2.0
+    container_name: vaani-rapidpro-web
+    command: ["gunicorn", "temba.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "4"]
+    environment:
+      DATABASE_URL: postgres://rapidpro:rapidpro_secure_password_replace_in_prod@rapidpro-db:5432/rapidpro
+      REDIS_URL: redis://rapidpro-redis:6379/0
+      SECRET_KEY: ${RAPIDPRO_SECRET_KEY:-replace_this_with_a_secure_random_key_in_production}
+      ALLOWED_HOSTS: "*"
+      BRANDING_NAME: "VAANI Citizen Feedback Engine"
+      DEFAULT_LANGUAGE: "hin"
+      TIMEZONE: "Asia/Kolkata"
+      VAANI_WEBHOOK_URL: "http://backend:8000/webhooks/rapidpro"
+    ports:
+      - "8000:8000"
+    depends_on:
+      rapidpro-db:
+        condition: service_healthy
+      rapidpro-redis:
+        condition: service_healthy
+    networks:
+      - vaani-network
+    restart: unless-stopped
+
+  rapidpro-celery:
+    image: ghcr.io/rapidpro/rapidpro:v13.2.0
+    container_name: vaani-rapidpro-celery
+    command: ["celery", "-A", "temba", "worker", "-l", "INFO", "-c", "4"]
+    environment:
+      DATABASE_URL: postgres://rapidpro:rapidpro_secure_password_replace_in_prod@rapidpro-db:5432/rapidpro
+      REDIS_URL: redis://rapidpro-redis:6379/0
+      SECRET_KEY: ${RAPIDPRO_SECRET_KEY:-replace_this_with_a_secure_random_key_in_production}
+    depends_on:
+      - rapidpro-web
+    networks:
+      - vaani-network
+    restart: unless-stopped
+
+  rapidpro-mailroom:
+    image: ghcr.io/rapidpro/mailroom:v13.2.0
+    container_name: vaani-rapidpro-mailroom
+    environment:
+      DATABASE_URL: postgres://rapidpro:rapidpro_secure_password_replace_in_prod@rapidpro-db:5432/rapidpro
+      REDIS_URL: redis://rapidpro-redis:6379/0
+    ports:
+      - "8090:8090"
+    depends_on:
+      - rapidpro-db
+      - rapidpro-redis
+    networks:
+      - vaani-network
+    restart: unless-stopped
+
+  rapidpro-courier:
+    image: ghcr.io/rapidpro/courier:v13.2.0
+    container_name: vaani-rapidpro-courier
+    environment:
+      DATABASE_URL: postgres://rapidpro:rapidpro_secure_password_replace_in_prod@rapidpro-db:5432/rapidpro
+      REDIS_URL: redis://rapidpro-redis:6379/0
+    depends_on:
+      - rapidpro-db
+      - rapidpro-redis
+    networks:
+      - vaani-network
+    restart: unless-stopped
+
+volumes:
+  rapidpro_pgdata:
+
+networks:
+  vaani-network:
+    driver: bridge

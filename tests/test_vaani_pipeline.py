@@ -55,6 +55,18 @@ def test_p1_p2_omnichannel_intake(client):
     wdata = res_wa.json()
     assert wdata["language"] == "ta"
 
+    # RapidPro DPG webhook intake (Hindi)
+    res_rp = client.post("/webhook/rapidpro", json={
+        "contact": {"urn": "tel:+919876543210"},
+        "text": "वाराणसी में रामपुर गाँव की सड़क बहुत खराब है।"
+    })
+    assert res_rp.status_code == 200
+    rp_data = res_rp.json()
+    assert rp_data["status"] == "success"
+    assert "ticket_id" in rp_data
+    assert "voice_reply" in rp_data
+
+
 
 def test_p3_classification_macro_f1():
     """P3: Macro-F1 >= 0.75 on held-out multilingual test set."""

@@ -1,0 +1,117 @@
+{
+  "version": "13",
+  "site": "https://app.rapidpro.io",
+  "flows": [
+    {
+      "name": "VAANI Omnichannel Grievance Intake",
+      "uuid": "7a35df90-21a4-44df-9e2a-1941d911b302",
+      "spec_version": "13.2.0",
+      "language": "base",
+      "type": "message",
+      "nodes": [
+        {
+          "uuid": "node-welcome-prompt",
+          "actions": [
+            {
+              "type": "send_msg",
+              "text": "Namaste! Welcome to VAANI (Voice-to-Network Aggregated National Intelligence) Public Grievance Desk.\n\nPlease describe the infrastructure issue (roads, water, electricity, drainage, sanitation) or send a voice message / photo."
+            }
+          ],
+          "exits": [
+            {
+              "uuid": "exit-wait-citizen-input",
+              "destination_uuid": "node-wait-for-response"
+            }
+          ]
+        },
+        {
+          "uuid": "node-wait-for-response",
+          "router": {
+            "type": "switch",
+            "cases": [
+              {
+                "arguments": ["@input.text"],
+                "type": "has_text",
+                "category_uuid": "cat-has-input"
+              }
+            ],
+            "categories": [
+              {
+                "uuid": "cat-has-input",
+                "name": "Has Response",
+                "exit_uuid": "exit-to-webhook"
+              }
+            ],
+            "default_category_uuid": "cat-has-input"
+          },
+          "exits": [
+            {
+              "uuid": "exit-to-webhook",
+              "destination_uuid": "node-call-vaani-webhook"
+            }
+          ]
+        },
+        {
+          "uuid": "node-call-vaani-webhook",
+          "actions": [
+            {
+              "type": "webhook",
+              "method": "POST",
+              "url": "https://api.vaani.gov.in/webhooks/rapidpro",
+              "headers": [
+                { "name": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\"contact\": {\"urn\": \"@contact.urn\", \"name\": \"@contact.name\"}, \"text\": \"@input.text\", \"media_url\": \"@input.attachments.0.url\", \"channel\": \"@channel.address_type\"}"
+            }
+          ],
+          "exits": [
+            {
+              "uuid": "exit-webhook-success",
+              "destination_uuid": "node-deliver-dual-reply"
+            },
+            {
+              "uuid": "exit-webhook-failure",
+              "destination_uuid": "node-fallback-reply"
+            }
+          ]
+        },
+        {
+          "uuid": "node-deliver-dual-reply",
+          "actions": [
+            {
+              "type": "send_msg",
+              "text": "@webhook.text_reply"
+            },
+            {
+              "type": "send_msg",
+              "attachments": [
+                "data:audio/wav;base64,@webhook.voice_reply.audio_base64"
+              ]
+            }
+          ],
+          "exits": [
+            {
+              "uuid": "exit-finish",
+              "destination_uuid": null
+            }
+          ]
+        },
+        {
+          "uuid": "node-fallback-reply",
+          "actions": [
+            {
+              "type": "send_msg",
+              "text": "Your report has been securely queued in the VAANI Sovereign Lakehouse. Tracking updates will follow shortly."
+            }
+          ],
+          "exits": [
+            {
+              "uuid": "exit-fallback-finish",
+              "destination_uuid": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

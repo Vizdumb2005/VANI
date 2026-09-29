@@ -22,6 +22,7 @@ from datetime import datetime, timezone, timedelta
 from fastapi import FastAPI, Form, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 import sys
@@ -51,13 +52,33 @@ app.add_middleware(
 )
 
 
+# Mount production-ready TypeScript static asset bundles
+_dist_assets = DASHBOARD / "dist" / "assets"
+_dash_assets = DASHBOARD / "assets"
+if _dist_assets.exists():
+    app.mount("/assets", StaticFiles(directory=str(_dist_assets)), name="static_assets")
+elif _dash_assets.exists():
+    app.mount("/assets", StaticFiles(directory=str(_dash_assets)), name="static_assets")
+
+_dist_next = DASHBOARD / "dist" / "_next"
+if _dist_next.exists():
+    app.mount("/_next", StaticFiles(directory=str(_dist_next)), name="next_assets")
+
+_dist_data = DASHBOARD / "dist" / "data"
+if _dist_data.exists():
+    app.mount("/data", StaticFiles(directory=str(_dist_data)), name="dist_data")
+
+
 @app.get("/", response_class=HTMLResponse)
 @app.get("/cockpit", response_class=HTMLResponse)
 def get_cockpit():
+    dist_idx = DASHBOARD / "dist" / "index.html"
+    if dist_idx.exists():
+        return HTMLResponse(content=dist_idx.read_text(encoding="utf-8"))
     idx = DASHBOARD / "index.html"
     if idx.exists():
         return HTMLResponse(content=idx.read_text(encoding="utf-8"))
-    return HTMLResponse("<h1>VAANI — Policy Cockpit</h1><p>Dashboard is generating. Please run workflow/run_all.py</p>")
+    return HTMLResponse("<h1>VAANI - Policy Cockpit</h1><p>Dashboard is generating. Please run workflow/run_all.py</p>")
 
 
 @app.get("/presentation", response_class=HTMLResponse)
@@ -160,6 +181,42 @@ def whatsapp_webhook(Body: str = Form(default=""), MediaUrl: str = Form(default=
     as MediaUrl; in demo/mock mode the cached reference carries the transcript."""
     channel = "whatsapp_voice" if MediaUrl else "whatsapp_text"
     return _ingest(channel, Body or None, MediaUrl or None, None, Body or None, From)
+
+
+@app.post("/webhook/rapidpro")
+@app.post("/webhooks/rapidpro")
+def rapidpro_webhook(payload: dict):
+    """RapidPro DPG omnichannel webhook for two-way WhatsApp and SMS routing."""
+    contact_urn = payload.get("contact", {}).get("urn", "tel:+919876543210") if isinstance(payload.get("contact"), dict) else str(payload.get("contact", "tel:+919876543210"))
+    text = payload.get("text") or payload.get("results", {}).get("citizen_text", {}).get("value", "सार्वजनिक बुनियादी ढांचे की शिकायत")
+    photo = payload.get("photo_base64") or payload.get("results", {}).get("photo_base64", {}).get("value")
+    voice = payload.get("voice_base64") or payload.get("results", {}).get("voice_base64", {}).get("value")
+    
+    channel = "rapidpro_voice" if voice else "rapidpro_text"
+    ingested = _ingest(channel=channel, text=text, audio_uri=None, audio_b64=voice,
+                       cached_reference=text, device_id=contact_urn, image_base64=photo)
+    
+    # Dual reply structure
+    lang = ingested.get("language", "hin")
+    ticket_id = f"VAA-{ingested.get('request_id', '')[:8].upper()}"
+    text_reply = f"VAANI DPG: आपकी शिकायत दर्ज हो गई है। ट्रैकिंग संख्या: {ticket_id}। 15 दिनों में समाधान अपेक्षित है।"
+    spoken_script = f"नमस्ते, आपकी शिकायत संख्या {ticket_id} दर्ज कर ली गई है। शीघ्र कार्रवाई की जाएगी।"
+    
+    return {
+        "status": "success",
+        "ticket_id": ticket_id,
+        "language": lang,
+        "text_reply": text_reply,
+        "voice_reply": {
+            "spoken_text": spoken_script,
+            "sample_rate": 16000,
+            "format": "audio/wav",
+            "audio_base64": "UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=",
+        },
+        "voice_audio_uri": "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=",
+        "ingested": ingested,
+    }
+
 
 
 def _read_results(name: str) -> dict | list:
