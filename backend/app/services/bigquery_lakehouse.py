@@ -35,9 +35,9 @@ class BigQueryLakehouse:
                     AVG(urgency) AS urgency
                 FROM `{settings.GCP_PROJECT_ID}.{self.dataset_id}.{settings.BQ_SIGNALS_TABLE}`
                 GROUP BY lgd_district_code, district, category
-                HAVING COUNT(DISTINCT device_hash) >= {min_k}
+                HAVING COUNT(DISTINCT device_hash) >= {int(min_k)}
                 ORDER BY urgency DESC
-                """
+                """  # nosec B608
                 query_job = self.client.query(query)
                 return [dict(row) for row in query_job.result()]
             except Exception as e:
@@ -60,11 +60,11 @@ class BigQueryLakehouse:
                     lgd_district_code,
                     district_name,
                     state_name,
-                    ST_Distance(district_geom, ST_GEOGPOINT({lng}, {lat})) as distance_meters
+                    ST_Distance(district_geom, ST_GEOGPOINT({float(lng)}, {float(lat)})) as distance_meters
                 FROM `{settings.GCP_PROJECT_ID}.{self.dataset_id}.{settings.BQ_SPATIAL_TABLE}`
-                WHERE ST_Contains(district_geom, ST_GEOGPOINT({lng}, {lat}))
+                WHERE ST_Contains(district_geom, ST_GEOGPOINT({float(lng)}, {float(lat)}))
                 LIMIT 1
-                """
+                """  # nosec B608
                 query_job = self.client.query(query)
                 results = list(query_job.result())
                 if results:

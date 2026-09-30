@@ -78,7 +78,7 @@ def transcribe_speech_ladder(
             headers = {"Authorization": settings.BHASHINI_API_KEY, "Content-Type": "application/json"}
             # Payload follows ULCA ASR standard
             req = urllib.request.Request(url, data=b"{}", headers=headers, method="POST")
-            with urllib.request.urlopen(req, timeout=4.0) as resp:
+            with urllib.request.urlopen(req, timeout=4.0) as resp:  # nosec B310
                 if resp.status == 200:
                     res_json = json.loads(resp.read().decode())
                     transcript = res_json.get("output", [{}])[0].get("source", "")

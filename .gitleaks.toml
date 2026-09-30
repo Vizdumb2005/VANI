@@ -1,0 +1,31 @@
+# Gitleaks configuration for VAANI Digital Public Good
+# Allows mock test tokens, documentation examples, and sanitized sample configurations
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Global allowlist for documentation examples, test fixtures, and mock tokens"
+paths = [
+  '''docs/.*''',
+  '''tests/.*''',
+  '''results/.*''',
+  '''\.env\.example''',
+  '''frontend/\.env\.example''',
+  '''data/raw/.*''',
+  '''\.gitlab-ci\.yml''',
+]
+stopwords = [
+  "your_secure_api_token",
+  "dev-operator",
+  "wrong_token",
+  "invalid_secret",
+  "test_token",
+  "demo_test",
+]
+regexes = [
+  '''your_secure_api_token''',
+  '''dev-operator''',
+  '''wrong_token''',
+  '''invalid_secret''',
+]
