@@ -1,35 +1,82 @@
 variable "project_id" {
-  description = "Google Cloud Platform Project ID"
+  description = "Google Cloud Platform project ID"
   type        = string
   default     = "vaani-sovereign-dpi"
 }
 
 variable "region" {
-  description = "Primary GCP Region (India Mumbai)"
+  description = "Primary Cloud Run region"
   type        = string
   default     = "asia-south1"
 }
 
 variable "secondary_region" {
-  description = "Secondary GCP Region (India Delhi)"
+  description = "Reserved secondary region for a later active-active rollout"
   type        = string
   default     = "asia-south2"
 }
 
 variable "environment" {
-  description = "Deployment Environment (staging / production)"
+  description = "Deployment environment"
   type        = string
   default     = "production"
 }
 
-variable "container_image" {
-  description = "Artifact Registry Container Image URI for VAANI Gateway"
+variable "artifact_repository" {
+  description = "Artifact Registry repository name"
   type        = string
-  default     = "asia-south1-docker.pkg.dev/vaani-sovereign-dpi/vaani/gateway:v2.0.0"
+  default     = "vaani"
+}
+
+variable "container_image" {
+  description = "Canonical VAANI API image URI"
+  type        = string
+  default     = "asia-south1-docker.pkg.dev/vaani-sovereign-dpi/vaani/api:latest"
 }
 
 variable "worker_container_image" {
-  description = "Artifact Registry Container Image URI for VAANI Async Worker"
+  description = "Pub/Sub worker image URI; defaults to the canonical API image until split"
   type        = string
-  default     = "asia-south1-docker.pkg.dev/vaani-sovereign-dpi/vaani/worker:v2.0.0"
+  default     = "asia-south1-docker.pkg.dev/vaani-sovereign-dpi/vaani/api:latest"
+}
+
+variable "firestore_database" {
+  description = "Firestore database name"
+  type        = string
+  default     = "(default)"
+}
+
+variable "firestore_location" {
+  description = "Firestore regional location"
+  type        = string
+  default     = "asia-south1"
+}
+
+variable "google_oauth_client_id" {
+  description = "Google OAuth web client ID used by frontend and backend token verification"
+  type        = string
+  sensitive   = false
+}
+
+variable "google_operator_emails" {
+  description = "Comma-separated allowlisted operator email addresses"
+  type        = string
+}
+
+variable "google_operator_domains" {
+  description = "Comma-separated allowlisted operator email domains"
+  type        = string
+  default     = ""
+}
+
+variable "cors_origins" {
+  description = "Comma-separated trusted browser origins"
+  type        = string
+  default     = "http://localhost:3000"
+}
+
+variable "allowed_hosts" {
+  description = "Comma-separated Cloud Run and frontend hostnames"
+  type        = string
+  default     = "localhost,127.0.0.1"
 }

@@ -1,52 +1,27 @@
-# Multi-stage production Dockerfile for VAANI Cloud Run API Gateway
-FROM python:3.11-slim as builder
-
-WORKDIR /build
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
-
-COPY requirements.txt .
-RUN pip install --no-cache-dir --user -r requirements.txt
-
-# Final minimal runtime image
+# Compatibility Dockerfile. Build with the repository root as context:
+# docker build -f backend/Dockerfile .
 FROM python:3.11-slim
 
-WORKDIR /app
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PORT=8080 \
+    APP_BASE_DIR=/app \
+    ENVIRONMENT=production
 
-# Install runtime audio dependencies (ffmpeg, libsndfile)
+WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    ffmpeg \
-    libsndfile1 \
-    ca-certificates \
+    ca-certificates ffmpeg libsndfile1 \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy installed packages from builder
-COPY --from=builder /root/.local /root/.local
-ENV PATH=/root/.local/bin:$PATH
-
-# Create unprivileged application user
-RUN useradd -m -u 1001 vaani && chown -R vaani:vaani /app
+COPY backend/requirements.txt ./requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+COPY backend/app ./app
+COPY workflow ./workflow
+COPY dashboard ./dashboard
+COPY docs ./docs
+COPY results ./results
+RUN useradd --create-home --uid 10001 vaani \
+    && chown -R vaani:vaani /app
 USER vaani
-
-# Copy application code, results, and workflows
-COPY --chown=vaani:vaani app/ ./app/
-COPY --chown=vaani:vaani ../results/ ./results/
-COPY --chown=vaani:vaani ../docs/ ./docs/
-COPY --chown=vaani:vaani ../workflow/ ./workflow/
-
-# Configure Cloud Run environment
-ENV PORT=8080
-ENV PYTHONUNBUFFERED=1
-ENV ENVIRONMENT=production
-
 EXPOSE 8080
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8080/health || exit 1
-
-# Launch production server with Uvicorn worker
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "4", "--log-level", "info"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080", "--workers", "2", "--proxy-headers"]

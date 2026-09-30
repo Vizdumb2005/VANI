@@ -1,202 +1,196 @@
-# ==============================================================================
-# Enterprise Production GitLab CI/CD Pipeline for VAANI Sovereign DPI Platform
-# Dual Deployment Strategy:
-#   1. GitLab Pages: Instant static Sovereign Policy Cockpit, Pitch Deck, and API Docs
-#   2. Google Cloud Platform (GCP): Multi-region Serverless Cloud Run (asia-south1 / asia-south2)
-# ==============================================================================
-
 stages:
-  - lint-and-security
+  - verify
   - test
   - build
-  - terraform-plan
+  - infra
   - deploy
 
 variables:
   PYTHON_VERSION: "3.11"
   NODE_VERSION: "20"
+  GCP_PROJECT_ID: "vaani-sovereign-dpi"
   GCP_REGION: "asia-south1"
-  GCP_SECONDARY_REGION: "asia-south2"
-  ARTIFACT_REGISTRY: "asia-south1-docker.pkg.dev/${GCP_PROJECT_ID}/vaani"
+  ARTIFACT_REPOSITORY: "vaani"
+  IMAGE_NAME: "api"
+  NEXT_PUBLIC_API_URL: ""
+  DEPLOY_ENVIRONMENT: "production"
+  TF_STATE_BUCKET: ""
+  CORS_ORIGINS: ""
+  ALLOWED_HOSTS: ""
+  GOOGLE_OPERATOR_EMAILS: ""
+  GOOGLE_OPERATOR_DOMAINS: ""
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_CACHE_DIR: "1"
 
 default:
   interruptible: true
 
-# -------------------------------------------------------------
-# Stage 1: Code Quality, Linting & AST Security Auditing
-# -------------------------------------------------------------
-backend:lint-and-security:
-  stage: lint-and-security
-  image: python:3.11-slim
+.python-job:
+  image: python:${PYTHON_VERSION}-slim
   before_script:
-    - pip install flake8 bandit safety
-  script:
-    - echo "Running flake8 code style checks..."
-    - flake8 backend/app --max-line-length=120 --ignore=E203,W503
-    - echo "Running Bandit AST security scanner for OWASP Top 10 vulnerabilities..."
-    - bandit -r backend/app -ll
-    - echo "Auditing Python dependencies for CVEs..."
-    - safety check -r backend/requirements.txt || true
+    - python --version
+    - pip install -r backend/requirements.txt
+  variables:
+    PYTHONPATH: "${CI_PROJECT_DIR}/backend"
 
-frontend:lint-and-typecheck:
-  stage: lint-and-security
-  image: node:20-alpine
-  before_script:
-    - cd frontend && npm ci --legacy-peer-deps
+backend:quality:
+  extends: .python-job
+  stage: verify
   script:
-    - echo "Verifying TypeScript strict type safety..."
-    - npx tsc --noEmit
+    - python -m compileall -q backend/app workflow
+    - python -m pytest tests -q --disable-warnings --maxfail=1
+
+backend:security:
+  image: python:${PYTHON_VERSION}-slim
+  stage: verify
+  before_script:
+    - pip install bandit safety
+  script:
+    - bandit -r backend/app -ll
+    - safety check -r backend/requirements.txt
+
+frontend:quality:
+  image: node:${NODE_VERSION}-alpine
+  stage: verify
+  script:
+    - cd frontend
+    - npm ci --ignore-scripts
+    - npm run type-check
 
 secret-detection:
-  stage: lint-and-security
   image:
-    name: zricethezav/gitleaks:latest
+    name: zricethezav/gitleaks:v8.21.2
     entrypoint: [""]
+  stage: verify
   script:
-    - echo "Scanning codebase to enforce zero plaintext secrets (DPDP Act & CIS compliance)..."
-    - gitleaks detect --verbose --redact
+    - gitleaks detect --source . --redact --no-banner
 
-# -------------------------------------------------------------
-# Stage 2: Automated Unit, Integration & Regression Testing
-# -------------------------------------------------------------
-backend:unit-tests:
-  stage: test
-  image: python:3.11-slim
-  before_script:
-    - apt-get update && apt-get install -y --no-install-recommends libsndfile1 ffmpeg
-    - pip install -r backend/requirements.txt
-  script:
-    - echo "Executing pytest suite across all omnichannel webhooks & GCP services..."
-    - python -m pytest tests/ -v --cov=backend/app --cov-report=term-missing --cov-report=xml
-  coverage: '/TOTAL.*\s+(\d+%)$/'
-  artifacts:
-    reports:
-      coverage_report:
-        coverage_format: cobertura
-        path: coverage.xml
-
-# -------------------------------------------------------------
-# Stage 3: Container Build & Google Artifact Registry Push
-# -------------------------------------------------------------
-build:gateway-container:
+frontend:build:
+  image: node:${NODE_VERSION}-alpine
   stage: build
-  image:
-    name: gcr.io/kaniko-project/executor:debug
-    entrypoint: [""]
+  needs: [frontend:quality]
   script:
-    - mkdir -p /kaniko/.docker
-    - echo "{\"auths\":{\"https://${GCP_REGION}-docker.pkg.dev\":{\"auth\":\"$(echo -n _json_key:${GCP_SERVICE_ACCOUNT_KEY} | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
-    - /kaniko/executor
-        --context "${CI_PROJECT_DIR}/backend"
-        --dockerfile "${CI_PROJECT_DIR}/backend/Dockerfile"
-        --destination "${ARTIFACT_REGISTRY}/gateway:${CI_COMMIT_SHA}"
-        --destination "${ARTIFACT_REGISTRY}/gateway:latest"
-        --cache=true
-  rules:
-    - if: '$GCP_SERVICE_ACCOUNT_KEY != null && ($CI_COMMIT_BRANCH == "main" || $CI_COMMIT_TAG != null)'
-      allow_failure: true
-    - when: manual
-      allow_failure: true
-
-build:frontend-nextjs:
-  stage: build
-  image: node:20-alpine
-  before_script:
-    - cd frontend && npm ci --legacy-peer-deps
-  script:
-    - echo "Building production Next.js 14 App Router bundle..."
+    - cd frontend
+    - npm ci --ignore-scripts
+    - export NEXT_PUBLIC_BASE_PATH="${PAGES_BASE_PATH:-/${CI_PROJECT_NAME}}"
     - npm run build
   artifacts:
     paths:
-      - frontend/.next
+      - frontend/out
     expire_in: 1 week
 
-# -------------------------------------------------------------
-# Stage 4: Terraform Infrastructure as Code Validation
-# -------------------------------------------------------------
-terraform:validate-and-plan:
-  stage: terraform-plan
-  image: hashicorp/terraform:1.7.0
+.gcp-oidc:
+  image: google/cloud-sdk:slim
+  id_tokens:
+    GCP_ID_TOKEN:
+      aud: https://iam.googleapis.com/${GCP_WIF_PROVIDER}
   before_script:
-    - cd terraform
-    - terraform init -backend=false
-  script:
-    - terraform validate
-    - echo "Terraform syntax and resource graph validated successfully."
+    - test -n "${GCP_WIF_PROVIDER}" || (echo "GCP_WIF_PROVIDER is required" && exit 1)
+    - test -n "${GCP_DEPLOYER_SERVICE_ACCOUNT}" || (echo "GCP_DEPLOYER_SERVICE_ACCOUNT is required" && exit 1)
+    - printf '%s' "${GCP_ID_TOKEN}" > /tmp/gitlab-oidc-token
+    - gcloud iam workload-identity-pools create-cred-config "${GCP_WIF_PROVIDER}" --service-account="${GCP_DEPLOYER_SERVICE_ACCOUNT}" --output-file=/tmp/gcp-credentials.json --credential-source-file=/tmp/gitlab-oidc-token
+    - gcloud auth login --cred-file=/tmp/gcp-credentials.json
+    - gcloud config set project "${GCP_PROJECT_ID}"
+    - gcloud auth configure-docker "${GCP_REGION}-docker.pkg.dev" --quiet
 
-# -------------------------------------------------------------
-# Stage 5A: GitLab Pages Deployment (Static Cockpit & Docs)
-# -------------------------------------------------------------
+.terraform-oidc:
+  image: hashicorp/terraform:1.10.3
+  id_tokens:
+    GCP_ID_TOKEN:
+      aud: https://iam.googleapis.com/${GCP_WIF_PROVIDER}
+  before_script:
+    - test -n "${GCP_WIF_PROVIDER}" || (echo "GCP_WIF_PROVIDER is required" && exit 1)
+    - test -n "${GCP_DEPLOYER_SERVICE_ACCOUNT}" || (echo "GCP_DEPLOYER_SERVICE_ACCOUNT is required" && exit 1)
+    - printf '%s' "${GCP_ID_TOKEN}" > /tmp/gitlab-oidc-token
+    - |
+      cat > /tmp/gcp-credentials.json <<EOF
+      {
+        "type": "external_account",
+        "audience": "//iam.googleapis.com/${GCP_WIF_PROVIDER}",
+        "subject_token_type": "urn:ietf:params:oauth:token-type:jwt",
+        "token_url": "https://sts.googleapis.com/v1/token",
+        "service_account_impersonation_url": "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/${GCP_DEPLOYER_SERVICE_ACCOUNT}:generateAccessToken",
+        "credential_source": {"file": "/tmp/gitlab-oidc-token"}
+      }
+      EOF
+    - export GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-credentials.json
+
+cloud-build:api:
+  extends: .gcp-oidc
+  stage: build
+  needs: [backend:quality, backend:security, secret-detection]
+  script:
+    - export IMAGE_URI="${GCP_REGION}-docker.pkg.dev/${GCP_PROJECT_ID}/${ARTIFACT_REPOSITORY}/${IMAGE_NAME}:${CI_COMMIT_SHA}"
+    - gcloud builds submit "${CI_PROJECT_DIR}" --project "${GCP_PROJECT_ID}" --tag "${IMAGE_URI}"
+    - echo "IMAGE_URI=${IMAGE_URI}" > build.env
+  artifacts:
+    reports:
+      dotenv: build.env
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "develop"'
+    - when: manual
+
+terraform:validate:
+  image: hashicorp/terraform:1.10.3
+  stage: infra
+  script:
+    - cd terraform
+    - terraform fmt -check -recursive
+    - terraform init -backend=false -input=false
+    - terraform validate
+
+terraform:plan:
+  extends: .terraform-oidc
+  image: hashicorp/terraform:1.10.3
+  stage: infra
+  needs: [terraform:validate, cloud-build:api]
+  script:
+    - test -n "${TF_STATE_BUCKET}" || (echo "TF_STATE_BUCKET is required" && exit 1)
+    - test -n "${GOOGLE_OAUTH_CLIENT_ID}" || (echo "GOOGLE_OAUTH_CLIENT_ID is required" && exit 1)
+    - test -n "${GOOGLE_OPERATOR_EMAILS}" || (echo "GOOGLE_OPERATOR_EMAILS is required" && exit 1)
+    - test -n "${CORS_ORIGINS}" || (echo "CORS_ORIGINS is required" && exit 1)
+    - test -n "${ALLOWED_HOSTS}" || (echo "ALLOWED_HOSTS is required" && exit 1)
+    - cd terraform
+    - terraform init -input=false -backend-config="bucket=${TF_STATE_BUCKET}" -backend-config="prefix=vaani/${CI_COMMIT_REF_SLUG}"
+    - terraform plan -input=false -var="project_id=${GCP_PROJECT_ID}" -var="container_image=${IMAGE_URI}" -var="worker_container_image=${IMAGE_URI}" -var="google_oauth_client_id=${GOOGLE_OAUTH_CLIENT_ID}" -var="google_operator_emails=${GOOGLE_OPERATOR_EMAILS}" -var="google_operator_domains=${GOOGLE_OPERATOR_DOMAINS}" -var="cors_origins=${CORS_ORIGINS}" -var="allowed_hosts=${ALLOWED_HOSTS}" -out=tfplan
+  artifacts:
+    paths:
+      - terraform/tfplan
+    expire_in: 1 week
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: manual
+
+terraform:apply:
+  extends: .terraform-oidc
+  image: hashicorp/terraform:1.10.3
+  stage: deploy
+  needs: [terraform:plan]
+  script:
+    - test -n "${TF_STATE_BUCKET}" || (echo "TF_STATE_BUCKET is required" && exit 1)
+    - test -n "${GOOGLE_OAUTH_CLIENT_ID}" || (echo "GOOGLE_OAUTH_CLIENT_ID is required" && exit 1)
+    - test -n "${GOOGLE_OPERATOR_EMAILS}" || (echo "GOOGLE_OPERATOR_EMAILS is required" && exit 1)
+    - test -n "${CORS_ORIGINS}" || (echo "CORS_ORIGINS is required" && exit 1)
+    - test -n "${ALLOWED_HOSTS}" || (echo "ALLOWED_HOSTS is required" && exit 1)
+    - cd terraform
+    - terraform init -input=false -backend-config="bucket=${TF_STATE_BUCKET}" -backend-config="prefix=vaani/${CI_COMMIT_REF_SLUG}"
+    - terraform apply -input=false -auto-approve tfplan
+  environment:
+    name: production
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: manual
+
 pages:
   stage: deploy
-  image: alpine:latest
-  before_script: []
+  needs: [frontend:build]
   script:
     - mkdir -p public
-    - cp -r dashboard/* public/
-    - cp -r results/*.png public/ 2>/dev/null || true
+    - cp -r frontend/out/. public/
     - mkdir -p public/docs
-    - cp -r docs/* public/docs/ 2>/dev/null || true
-    - echo "VAANI Sovereign Policy Cockpit & Documentation published to GitLab Pages."
+    - cp -r docs/. public/docs/
   artifacts:
     paths:
       - public
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "master"'
-      when: on_success
-
-# -------------------------------------------------------------
-# Stage 5B: Zero-Downtime Deployment to Google Cloud Run
-# -------------------------------------------------------------
-deploy:cloud-run-staging:
-  stage: deploy
-  image: google/cloud-sdk:slim
-  script:
-    - echo "${GCP_SERVICE_ACCOUNT_KEY}" | gcloud auth activate-service-account --key-file=-
-    - gcloud config set project "${GCP_PROJECT_ID}"
-    - gcloud run deploy vaani-api-gateway-staging
-        --image "${ARTIFACT_REGISTRY}/gateway:${CI_COMMIT_SHA}"
-        --region "${GCP_REGION}"
-        --platform managed
-        --allow-unauthenticated
-        --concurrency 80
-        --min-instances 0
-        --max-instances 10
-  environment:
-    name: staging
-    url: https://vaani-staging.gov.in
-  rules:
-    - if: '$GCP_SERVICE_ACCOUNT_KEY != null && $CI_COMMIT_BRANCH == "develop"'
-    - when: manual
-      allow_failure: true
-
-deploy:cloud-run-production:
-  stage: deploy
-  image: google/cloud-sdk:slim
-  script:
-    - echo "${GCP_SERVICE_ACCOUNT_KEY}" | gcloud auth activate-service-account --key-file=-
-    - gcloud config set project "${GCP_PROJECT_ID}"
-    - echo "Deploying primary production gateway to asia-south1 (Mumbai)..."
-    - gcloud run deploy vaani-api-gateway-mumbai
-        --image "${ARTIFACT_REGISTRY}/gateway:${CI_COMMIT_SHA}"
-        --region "${GCP_REGION}"
-        --platform managed
-        --concurrency 80
-        --min-instances 2
-        --max-instances 100
-    - echo "Deploying secondary failover gateway to asia-south2 (Delhi)..."
-    - gcloud run deploy vaani-api-gateway-delhi
-        --image "${ARTIFACT_REGISTRY}/gateway:${CI_COMMIT_SHA}"
-        --region "${GCP_SECONDARY_REGION}"
-        --platform managed
-        --concurrency 80
-        --min-instances 1
-        --max-instances 50
-  environment:
-    name: production
-    url: https://vaani.gov.in
-  rules:
-    - if: '$GCP_SERVICE_ACCOUNT_KEY != null && ($CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "master")'
-      when: manual
-    - when: manual
-      allow_failure: true
+    - if: '$CI_COMMIT_BRANCH == "main"'

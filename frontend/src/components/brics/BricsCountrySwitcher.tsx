@@ -36,7 +36,7 @@ export const BricsCountrySwitcher: React.FC = () => {
                   : "bg-white/5 hover:bg-white/10 text-mutedText border border-white/5"
               }`}
             >
-              <span>{c.flag}</span>
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-white/10">{c.iso}</span>
               <span>{c.name}</span>
             </button>
           ))}

@@ -11,11 +11,13 @@ Supports two-way multi-turn conversational intake over WhatsApp and SMS:
 """
 import base64
 import logging
+import secrets
 import time
 import uuid
 from typing import Optional, Dict, Any
-from fastapi import APIRouter, Request, HTTPException
+from fastapi import APIRouter, Request, HTTPException, Header
 
+from ..core.config import settings
 from ..core.security import device_hash, redact_pii, generate_ticket_id
 from ..services.speech_service import transcribe_speech_ladder, synthesize_speech_tts
 from ..services.vertex_gemini import analyze_infrastructure_damage, generate_citizen_dual_reply
@@ -28,7 +30,10 @@ lakehouse = BigQueryLakehouse()
 
 @router.post("/webhooks/rapidpro")
 @router.post("/webhook/rapidpro")
-async def handle_rapidpro_webhook(request: Request):
+async def handle_rapidpro_webhook(
+    request: Request,
+    x_rapidpro_token: Optional[str] = Header(default=None, alias="X-RapidPro-Token"),
+):
     """Processes inbound citizen interactions from a RapidPro Flow.
     
     Accepts:
@@ -50,6 +55,12 @@ async def handle_rapidpro_webhook(request: Request):
        }
     3. Form-encoded body fallback.
     """
+    if settings.ENVIRONMENT.lower() not in {"development", "test"}:
+        if not settings.RAPIDPRO_API_TOKEN or not x_rapidpro_token or not secrets.compare_digest(
+            x_rapidpro_token, settings.RAPIDPRO_API_TOKEN
+        ):
+            raise HTTPException(status_code=401, detail="Invalid RapidPro webhook token")
+
     content_type = request.headers.get("content-type", "").lower()
     data: Dict[str, Any] = {}
 

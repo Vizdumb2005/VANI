@@ -45,16 +45,17 @@ export const ScmImpactEngine: React.FC<ScmImpactEngineProps> = ({ impactReport }
   const treatmentX = getX(treatmentIdx);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
-      <div>
-        <h3 className="text-xl font-serif text-charcoal font-semibold">
-          Synthetic Control Impact Engine (Abadie Method)
-        </h3>
-        <p className="text-sm text-secondary mt-1 max-w-3xl">
-          Verifying public project completion impact against lookalike synthetic counterfactual donor pools.
-          Ensures citizen demand decay is genuinely caused by capital commissioning rather than seasonal regression.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1">
+        <div className="flex items-center gap-3">
+          <h3 className="text-lg font-serif text-charcoal font-semibold">
+            Causal Impact Engine (SCM)
+          </h3>
+          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-surface-subtle border border-border text-secondary">
+            Synthetic Control Evaluation
+          </span>
+        </div>
       </div>
 
       {/* District Selector Tabs */}
@@ -190,11 +191,6 @@ export const ScmImpactEngine: React.FC<ScmImpactEngineProps> = ({ impactReport }
               ))}
             </svg>
           </div>
-
-          <p className="text-[11px] text-secondary mt-2">
-            Pre-treatment calibration window: 8 months (RMSPE: {districtData.pre_rmspe.toFixed(2)}).
-            Synthetic donor weights determined via non-negative constrained optimization.
-          </p>
         </div>
 
         {/* Causal Metrics Ledger (5 cols) */}
@@ -250,11 +246,6 @@ export const ScmImpactEngine: React.FC<ScmImpactEngineProps> = ({ impactReport }
               ))}
             </div>
           </div>
-
-          <p className="text-[11px] text-secondary leading-relaxed">
-            In-time placebo tests verify zero anomalous effect prior to month 8.
-            In-space placebos run across all non-treated districts confirm empirical significance.
-          </p>
         </div>
       </div>
     </div>

@@ -4,6 +4,7 @@ import { submitRequest } from '../services/api';
 
 interface ProductionChannelGatewayProps {
   onShowToast: (msg: string) => void;
+  canDispatch: boolean;
 }
 
 const PRODUCTION_CHANNELS: ProductionChannel[] = [
@@ -57,7 +58,7 @@ const INITIAL_EVENTS: IngestedLiveEvent[] = [
   { id: "EVT-8838", channel: "WhatsApp Voice", district: "Salem", state: "Tamil Nadu", category: "School Building", timestamp: "11 mins ago", status: "Hotspot Cluster #5", hasVisualEvidence: true },
 ];
 
-export const ProductionChannelGateway: React.FC<ProductionChannelGatewayProps> = ({ onShowToast }) => {
+export const ProductionChannelGateway: React.FC<ProductionChannelGatewayProps> = ({ onShowToast, canDispatch }) => {
   const [events, setEvents] = useState<IngestedLiveEvent[]>(INITIAL_EVENTS);
   const [testChannel, setTestChannel] = useState<string>('whatsapp_voice');
   const [testText, setTestText] = useState<string>('वाराणसी में रामपुर गाँव की मुख्य सड़क भारी बारिश के कारण टूट चुकी है।');
@@ -66,64 +67,72 @@ export const ProductionChannelGateway: React.FC<ProductionChannelGatewayProps> =
   const [lastResult, setLastResult] = useState<CitizenIntakeResponse | null>(null);
 
   const handleTestIngest = async () => {
+    if (!canDispatch) {
+      onShowToast("Operator sign-in is required before live event dispatch");
+      return;
+    }
     setIsTesting(true);
     const t0 = performance.now();
-    const res = await submitRequest({
-      channel: testChannel,
-      text: testText,
-      device_id: "9876543210",
-      image_base64: `sample_${testPhoto}_photo.jpg`
-    });
-    const elapsed = Math.round(performance.now() - t0);
-    setIsTesting(false);
-    setLastResult(res);
+    try {
+      const res = await submitRequest({
+        channel: testChannel,
+        text: testText,
+        device_id: "9876543210",
+        image_base64: `sample_${testPhoto}_photo.jpg`
+      });
+      const elapsed = Math.round(performance.now() - t0);
+      setLastResult(res);
 
-    // Add to live events feed
-    const newEvent: IngestedLiveEvent = {
-      id: `EVT-${Math.floor(8843 + Math.random() * 50)}`,
-      channel: testChannel.includes('whatsapp') ? 'WhatsApp Voice' : 'Twilio IVR',
-      district: "Varanasi",
-      state: "Uttar Pradesh",
-      category: testPhoto === 'roads' ? 'Roads' : (testPhoto === 'water' ? 'Water Supply' : 'Power Outage'),
-      timestamp: "Just now",
-      status: "Ingested & Geocoded",
-      hasVisualEvidence: true
-    };
-    setEvents([newEvent, ...events.slice(0, 5)]);
-    onShowToast(`Processed live ingestion event in ${Math.max(16, elapsed)}ms`);
+      // Add to live events feed
+      const newEvent: IngestedLiveEvent = {
+        id: `EVT-${Math.floor(8843 + Math.random() * 50)}`,
+        channel: testChannel.includes('whatsapp') ? 'WhatsApp Voice' : 'Twilio IVR',
+        district: "Varanasi",
+        state: "Uttar Pradesh",
+        category: testPhoto === 'roads' ? 'Roads' : (testPhoto === 'water' ? 'Water Supply' : 'Power Outage'),
+        timestamp: "Just now",
+        status: "Ingested & Geocoded",
+        hasVisualEvidence: true
+      };
+      setEvents([newEvent, ...events.slice(0, 5)]);
+      onShowToast(`Processed live ingestion event in ${Math.max(16, elapsed)}ms`);
+    } catch (error) {
+      onShowToast(error instanceof Error ? error.message : "Live event dispatch failed");
+    } finally {
+      setIsTesting(false);
+    }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Overview Header */}
-      <div>
-        <h3 className="text-xl font-serif text-charcoal font-semibold">
-          Omnichannel Ingestion Gateways & Telemetry
-        </h3>
-        <p className="text-sm text-secondary mt-1 max-w-3xl">
-          Real-time production connectors interfacing Meta WhatsApp Graph API, Twilio IVR voice streams, and Cloud Pub/Sub pipeline topics.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1">
+        <div className="flex items-center gap-3">
+          <h3 className="text-lg font-serif text-charcoal font-semibold">
+            Omnichannel Gateways & Telemetry
+          </h3>
+          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-surface-subtle border border-border text-secondary">
+            5/5 Connected · Live Streaming
+          </span>
+        </div>
       </div>
 
-      {/* Gateway Status Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Gateway Status Cards (5-col compact) */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
         {PRODUCTION_CHANNELS.map((ch, idx) => (
-          <div key={idx} className="p-4 rounded-card border border-border bg-surface flex flex-col justify-between space-y-3">
+          <div key={idx} className="p-3 rounded-card border border-border bg-surface flex flex-col justify-between space-y-2">
             <div>
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono uppercase font-semibold text-charcoal">
+                <span className="text-[11px] font-mono uppercase font-semibold text-charcoal truncate" title={ch.name}>
                   {ch.name}
                 </span>
-                <span className="w-2 h-2 rounded-full bg-pastel-green-text"></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-pastel-green-text flex-shrink-0 animate-pulse"></span>
               </div>
-              <p className="text-[11px] text-secondary mt-1">{ch.provider}</p>
-              <div className="text-[10px] font-mono text-secondary mt-0.5 truncate">
-                {ch.protocol}
-              </div>
+              <p className="text-[10px] text-secondary mt-0.5 truncate">{ch.provider}</p>
             </div>
 
-            <div className="pt-2 border-t border-border flex items-center justify-between text-xs font-mono">
-              <span className="text-secondary">{ch.throughput}</span>
+            <div className="pt-1.5 border-t border-border flex items-center justify-between text-[10px] font-mono">
+              <span className="text-secondary truncate">{ch.throughput}</span>
               <span className="text-charcoal font-medium">{ch.lastEvent}</span>
             </div>
           </div>
@@ -180,9 +189,6 @@ export const ProductionChannelGateway: React.FC<ProductionChannelGatewayProps> =
             </div>
           </div>
 
-          <p className="text-[11px] text-secondary mt-3">
-            All inbound packets are processed via in-memory ASR ladders. Phone numbers and device identifiers are irreversibly salted with HMAC-SHA256 at the edge.
-          </p>
         </div>
 
         {/* Webhook Connectivity Validator (5 cols) */}
@@ -248,13 +254,19 @@ export const ProductionChannelGateway: React.FC<ProductionChannelGatewayProps> =
               />
             </div>
 
-            <button
-              onClick={handleTestIngest}
-              disabled={isTesting}
-              className="w-full py-2 rounded bg-charcoal text-white text-xs font-medium uppercase tracking-wider hover:bg-charcoal/90 transition-colors shadow-subtle disabled:opacity-50"
-            >
-              {isTesting ? 'Streaming to Cloud Run...' : 'Dispatch Live Inbound Event'}
-            </button>
+            {canDispatch ? (
+              <button
+                onClick={handleTestIngest}
+                disabled={isTesting}
+                className="w-full py-2 rounded bg-charcoal text-white text-xs font-medium uppercase tracking-wider hover:bg-charcoal/90 transition-colors shadow-subtle disabled:opacity-50"
+              >
+                {isTesting ? 'Streaming to Cloud Run...' : 'Dispatch Live Inbound Event'}
+              </button>
+            ) : (
+              <div className="w-full rounded border border-border px-3 py-2 text-center text-[11px] font-mono text-secondary">
+                Read-only viewer mode · live dispatch disabled
+              </div>
+            )}
           </div>
 
           {lastResult && (

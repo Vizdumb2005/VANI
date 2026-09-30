@@ -40,7 +40,7 @@ export const BRICS_COUNTRIES = [
   {
     iso: "IND",
     name: "India",
-    flag: "🇮🇳",
+    flag: "IND",
     currency: "INR (₹)",
     spatial_standard: "MoPR Local Government Directory (LGD 6-digit)",
     schemes: ["PMGSY III", "Jal Jeevan Mission", "RDSS", "PM-ABHIM", "Samagra Shiksha"],
@@ -48,7 +48,7 @@ export const BRICS_COUNTRIES = [
   {
     iso: "BRA",
     name: "Brazil",
-    flag: "🇧🇷",
+    flag: "BRA",
     currency: "BRL (R$)",
     spatial_standard: "IBGE Código de Município (7 dígitos)",
     schemes: ["Novo PAC Rodovias", "Marco Legal do Saneamento", "Luz para Todos", "SUS Digital"],
@@ -56,7 +56,7 @@ export const BRICS_COUNTRIES = [
   {
     iso: "ZAF",
     name: "South Africa",
-    flag: "🇿🇦",
+    flag: "ZAF",
     currency: "ZAR (R)",
     spatial_standard: "Municipal Demarcation Board (MDB Category B/C)",
     schemes: ["S'hamba Sonke", "Municipal Infrastructure Grant", "Eskom INEP", "NHI"],

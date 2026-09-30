@@ -1,5 +1,10 @@
 terraform {
   required_version = ">= 1.5.0"
+
+  backend "gcs" {
+    # Bucket and prefix are supplied by CI/local deployment commands.
+  }
+
   required_providers {
     google = {
       source  = "hashicorp/google"
@@ -13,11 +18,60 @@ provider "google" {
   region  = var.region
 }
 
-# 1. Cloud Run: VAANI API & Core Gateway (Primary asia-south1)
+resource "google_project_service" "required" {
+  for_each = toset([
+    "artifactregistry.googleapis.com",
+    "aiplatform.googleapis.com",
+    "bigquery.googleapis.com",
+    "cloudresourcemanager.googleapis.com",
+    "cloudtasks.googleapis.com",
+    "compute.googleapis.com",
+    "firestore.googleapis.com",
+    "iam.googleapis.com",
+    "iamcredentials.googleapis.com",
+    "logging.googleapis.com",
+    "monitoring.googleapis.com",
+    "pubsub.googleapis.com",
+    "run.googleapis.com",
+    "secretmanager.googleapis.com",
+    "serviceusage.googleapis.com",
+    "storage.googleapis.com",
+    "texttospeech.googleapis.com",
+  ])
+  project            = var.project_id
+  service            = each.value
+  disable_on_destroy = false
+}
+
+resource "google_artifact_registry_repository" "vaani" {
+  project       = var.project_id
+  location      = var.region
+  repository_id = var.artifact_repository
+  description   = "VAANI container images"
+  format        = "DOCKER"
+  depends_on    = [google_project_service.required]
+}
+
+resource "google_firestore_database" "vaani" {
+  project     = var.project_id
+  name        = var.firestore_database
+  location_id = var.firestore_location
+  type                        = "FIRESTORE_NATIVE"
+  concurrency_mode            = "OPTIMISTIC"
+  app_engine_integration_mode = "DISABLED"
+  depends_on                  = [google_project_service.required]
+}
+
+# 1. Cloud Run: VAANI API & Core Gateway (Primary region)
 resource "google_cloud_run_v2_service" "vaani_gateway_primary" {
   name     = "vaani-api-gateway-${var.region}"
   location = var.region
   ingress  = "INGRESS_TRAFFIC_ALL"
+
+  depends_on = [
+    google_project_service.required,
+    google_project_iam_member.gateway_secrets,
+  ]
 
   template {
     scaling {
@@ -51,12 +105,72 @@ resource "google_cloud_run_v2_service" "vaani_gateway_primary" {
         value = var.region
       }
       env {
+        name  = "VERTEX_AI_LOCATION"
+        value = var.region
+      }
+      env {
+        name  = "APP_BASE_DIR"
+        value = "/app"
+      }
+      env {
+        name  = "USE_VERTEX_AI"
+        value = "true"
+      }
+      env {
+        name  = "ALLOW_DEV_AUTH"
+        value = "false"
+      }
+      env {
+        name  = "FIRESTORE_DATABASE"
+        value = google_firestore_database.vaani.name
+      }
+      env {
+        name  = "GOOGLE_OAUTH_CLIENT_ID"
+        value = var.google_oauth_client_id
+      }
+      env {
+        name  = "GOOGLE_OPERATOR_EMAILS"
+        value = var.google_operator_emails
+      }
+      env {
+        name  = "GOOGLE_OPERATOR_DOMAINS"
+        value = var.google_operator_domains
+      }
+      env {
+        name  = "CORS_ORIGINS"
+        value = var.cors_origins
+      }
+      env {
+        name  = "ALLOWED_HOSTS"
+        value = var.allowed_hosts
+      }
+      env {
         name  = "BQ_DATASET"
         value = google_bigquery_dataset.vaani_lakehouse.dataset_id
       }
       env {
         name  = "PUBSUB_TOPIC_INTAKE"
         value = google_pubsub_topic.intake_events.name
+      }
+      env {
+        name  = "PUBSUB_TOPIC_VISION"
+        value = google_pubsub_topic.vision_queue.name
+      }
+      env {
+        name  = "PUBSUB_TOPIC_CPGRAMS"
+        value = google_pubsub_topic.cpgrams_queue.name
+      }
+      env {
+        name  = "CPGRAMS_QUEUE_NAME"
+        value = google_cloud_tasks_queue.cpgrams_rate_limiter.name
+      }
+      env {
+        name  = "PUBSUB_PUSH_AUDIENCE"
+        value = "${google_cloud_run_v2_service.vaani_worker.uri}/pubsub/intake"
+      }
+      env {
+        name  = "PUBSUB_PUSH_SERVICE_ACCOUNT_EMAIL"
+        value = google_service_account.vaani_gateway_sa.email
       }
 
       # Secrets mapped securely from Secret Manager
@@ -87,6 +201,33 @@ resource "google_cloud_run_v2_service" "vaani_gateway_primary" {
           }
         }
       }
+      env {
+        name = "WHATSAPP_VERIFY_TOKEN"
+        value_source {
+          secret_key_ref {
+            secret  = google_secret_manager_secret.whatsapp_verify_token.secret_id
+            version = "latest"
+          }
+        }
+      }
+      env {
+        name = "RAPIDPRO_API_TOKEN"
+        value_source {
+          secret_key_ref {
+            secret  = google_secret_manager_secret.rapidpro_api_token.secret_id
+            version = "latest"
+          }
+        }
+      }
+      env {
+        name = "TWILIO_AUTH_TOKEN"
+        value_source {
+          secret_key_ref {
+            secret  = google_secret_manager_secret.twilio_auth_token.secret_id
+            version = "latest"
+          }
+        }
+      }
 
       liveness_probe {
         http_get {
@@ -112,6 +253,11 @@ resource "google_cloud_run_v2_service" "vaani_worker" {
   location = var.region
   ingress  = "INGRESS_TRAFFIC_INTERNAL_ONLY"
 
+  depends_on = [
+    google_project_service.required,
+    google_project_iam_member.worker_secrets,
+  ]
+
   template {
     scaling {
       min_instance_count = 0
@@ -130,8 +276,94 @@ resource "google_cloud_run_v2_service" "vaani_worker" {
       }
 
       env {
+        name  = "ENVIRONMENT"
+        value = var.environment
+      }
+      env {
         name  = "GCP_PROJECT_ID"
         value = var.project_id
+      }
+      env {
+        name  = "GCP_REGION"
+        value = var.region
+      }
+      env {
+        name  = "VERTEX_AI_LOCATION"
+        value = var.region
+      }
+      env {
+        name  = "APP_BASE_DIR"
+        value = "/app"
+      }
+      env {
+        name  = "USE_VERTEX_AI"
+        value = "true"
+      }
+      env {
+        name  = "ALLOW_DEV_AUTH"
+        value = "false"
+      }
+      env {
+        name  = "FIRESTORE_DATABASE"
+        value = google_firestore_database.vaani.name
+      }
+      env {
+        name  = "PUBSUB_TOPIC_INTAKE"
+        value = google_pubsub_topic.intake_events.name
+      }
+      env {
+        name  = "PUBSUB_TOPIC_VISION"
+        value = google_pubsub_topic.vision_queue.name
+      }
+      env {
+        name  = "PUBSUB_TOPIC_CPGRAMS"
+        value = google_pubsub_topic.cpgrams_queue.name
+      }
+      env {
+        name  = "CPGRAMS_QUEUE_NAME"
+        value = google_cloud_tasks_queue.cpgrams_rate_limiter.name
+      }
+      env {
+        name  = "GOOGLE_OAUTH_CLIENT_ID"
+        value = var.google_oauth_client_id
+      }
+      env {
+        name  = "GOOGLE_OPERATOR_EMAILS"
+        value = var.google_operator_emails
+      }
+      env {
+        name  = "GOOGLE_OPERATOR_DOMAINS"
+        value = var.google_operator_domains
+      }
+      env {
+        name  = "ALLOWED_HOSTS"
+        value = "*.run.app"
+      }
+      env {
+        name  = "PUBSUB_PUSH_AUDIENCE"
+        value = "${google_cloud_run_v2_service.vaani_worker.uri}/pubsub/intake"
+      }
+      env {
+        name  = "PUBSUB_PUSH_SERVICE_ACCOUNT_EMAIL"
+        value = google_service_account.vaani_gateway_sa.email
+      }
+
+      dynamic "env" {
+        for_each = {
+          HMAC_SALT             = google_secret_manager_secret.hmac_salt.secret_id
+          WHATSAPP_APP_SECRET   = google_secret_manager_secret.whatsapp_app_secret.secret_id
+          WHATSAPP_VERIFY_TOKEN = google_secret_manager_secret.whatsapp_verify_token.secret_id
+          TELEGRAM_BOT_SECRET   = google_secret_manager_secret.telegram_bot_secret.secret_id
+        }
+        content {
+          name = env.key
+          value_source {
+            secret_key_ref {
+              secret  = env.value
+              version = "latest"
+            }
+          }
+        }
       }
     }
 
@@ -161,6 +393,7 @@ resource "google_pubsub_subscription" "worker_subscription" {
     push_endpoint = "${google_cloud_run_v2_service.vaani_worker.uri}/pubsub/intake"
     oidc_token {
       service_account_email = google_service_account.vaani_gateway_sa.email
+      audience             = "${google_cloud_run_v2_service.vaani_worker.uri}/pubsub/intake"
     }
   }
 
@@ -231,6 +464,7 @@ resource "google_bigquery_table" "deduplicated_signals" {
     { name = "lgd_district_code", type = "INTEGER", mode = "REQUIRED" },
     { name = "district", type = "STRING", mode = "REQUIRED" },
     { name = "category", type = "STRING", mode = "REQUIRED" },
+    { name = "device_hash", type = "STRING", mode = "NULLABLE" },
     { name = "report_count", type = "INTEGER", mode = "REQUIRED" },
     { name = "urgency", type = "FLOAT", mode = "REQUIRED" },
     { name = "centroid", type = "GEOGRAPHY", mode = "NULLABLE" }

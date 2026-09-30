@@ -41,8 +41,8 @@ def redact_pii(text: str) -> str:
 def verify_whatsapp_signature(payload: bytes, signature_header: Optional[str]) -> bool:
     """Verifies X-Hub-Signature-256 for Meta WhatsApp Cloud API webhooks."""
     if not signature_header:
-        # Permitted in local sandbox/test environments without webhook secret
-        return settings.ENVIRONMENT != "production"
+        # Permitted only in local sandbox/test environments without webhook secret.
+        return settings.ENVIRONMENT.lower() in {"development", "test"}
     
     if not signature_header.startswith("sha256="):
         return False
@@ -56,8 +56,20 @@ def verify_whatsapp_signature(payload: bytes, signature_header: Optional[str]) -
 def verify_telegram_token(header_token: Optional[str]) -> bool:
     """Verifies X-Telegram-Bot-Api-Secret-Token on incoming Telegram updates."""
     if not header_token:
-        return settings.ENVIRONMENT != "production"
+        return settings.ENVIRONMENT.lower() in {"development", "test"}
     return hmac.compare_digest(header_token.strip(), settings.TELEGRAM_BOT_SECRET.strip())
+
+
+def verify_twilio_signature(url: str, params: dict[str, str], signature: Optional[str]) -> bool:
+    """Verify Twilio's X-Twilio-Signature for form-encoded webhooks."""
+    if not signature or not settings.TWILIO_AUTH_TOKEN:
+        return False
+    payload = url + "".join(f"{key}{params[key]}" for key in sorted(params))
+    digest = hmac.new(settings.TWILIO_AUTH_TOKEN.encode("utf-8"), payload.encode("utf-8"), hashlib.sha1)
+    import base64
+
+    expected = base64.b64encode(digest.digest()).decode("ascii")
+    return hmac.compare_digest(expected, signature.strip())
 
 
 def generate_ticket_id(district_name: Optional[str] = None) -> str:

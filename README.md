@@ -20,6 +20,8 @@ VAANI automatically performs **Vertex AI Gemini 2.0 multimodal damage inspection
 
 ## High-Level Architecture & GCP Infrastructure Stack
 
+> For the comprehensive, end-to-end technical specifications, mathematical models, and protocol definitions, refer to **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**.
+
 ```text
                                   +---------------------------------------------+
                                   |    Edge Security & Rate Limiting            |

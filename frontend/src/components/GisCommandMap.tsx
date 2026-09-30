@@ -37,10 +37,10 @@ export const GisCommandMap: React.FC<GisCommandMapProps> = ({ hotspots, signals 
         scrollWheelZoom: false,
       }).setView([21.5, 80.0], 5);
 
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; CartoDB &copy; OpenStreetMap contributors',
-        subdomains: 'abcd',
-        maxZoom: 18,
+      L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+        attribution: '&copy; Google Maps',
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+        maxZoom: 19,
       }).addTo(map);
 
       mapInstanceRef.current = map;
@@ -110,62 +110,62 @@ export const GisCommandMap: React.FC<GisCommandMapProps> = ({ hotspots, signals 
 
   return (
     <div className="space-y-4">
-      {/* Header without academic fluff */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h3 className="text-xl font-serif text-charcoal font-semibold">
-            Sovereign GIS Infrastructure Command Map
+      {/* Clean Dashboard Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1">
+        <div className="flex items-center gap-3">
+          <h3 className="text-lg font-serif text-charcoal font-semibold">
+            Geospatial Command Map
           </h3>
-          <p className="text-xs text-secondary mt-0.5">
-            Real-time geospatial hotspot clustering anchored to Ministry of Panchayati Raj Local Government Directory (LGD) centroids.
-          </p>
+          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-surface-subtle border border-border text-secondary">
+            {filteredHotspots.length} Active Hotspots
+          </span>
         </div>
 
         {/* Category legend */}
-        <div className="flex flex-wrap gap-2 text-xs font-mono">
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-border bg-surface">
+        <div className="flex flex-wrap gap-1.5 text-xs font-mono">
+          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-border bg-surface text-[11px]">
             <span className="w-2 h-2 rounded-full bg-[#B45309]"></span> Roads
           </span>
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-border bg-surface">
+          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-border bg-surface text-[11px]">
             <span className="w-2 h-2 rounded-full bg-[#0284C7]"></span> Water
           </span>
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-border bg-surface">
+          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-border bg-surface text-[11px]">
             <span className="w-2 h-2 rounded-full bg-[#CA8A04]"></span> Power
           </span>
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-border bg-surface">
+          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-border bg-surface text-[11px]">
             <span className="w-2 h-2 rounded-full bg-[#16A34A]"></span> Health
           </span>
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-border bg-surface">
+          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-border bg-surface text-[11px]">
             <span className="w-2 h-2 rounded-full bg-[#DC2626]"></span> Safety
           </span>
-          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-border bg-surface">
+          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-border bg-surface text-[11px]">
             <span className="w-2 h-2 rounded-full bg-[#4F46E5]"></span> Education
           </span>
         </div>
       </div>
 
       {/* Bento Grid: Map + Hotspot Ledger */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* Map Canvas (7 cols) */}
-        <div className="lg:col-span-7 flex flex-col space-y-2">
+        <div className="lg:col-span-7 flex flex-col space-y-1.5">
           <div className="border border-border rounded-card overflow-hidden bg-surface relative h-[480px]">
             <div ref={mapContainerRef} className="w-full h-full z-10" />
           </div>
-          <div className="text-xs text-secondary flex justify-between items-center px-1">
-            <span>Spatial Layer: MoPR LGD 6-digit centroids</span>
-            <span className="font-mono">{filteredHotspots.length} hotspots active</span>
+          <div className="text-[11px] text-secondary flex justify-between items-center px-1 font-mono">
+            <span>MoPR LGD Geocoded Registry</span>
+            <span>{filteredHotspots.length} markers displayed</span>
           </div>
         </div>
 
         {/* Hotspot Ledger (5 cols) */}
-        <div className="lg:col-span-5 border border-border rounded-card bg-surface p-5 flex flex-col justify-between">
+        <div className="lg:col-span-5 border border-border rounded-card bg-surface p-4 flex flex-col justify-between h-[505px]">
           <div>
-            <div className="flex items-center justify-between mb-3">
-              <h4 className="font-serif text-lg font-semibold text-charcoal">
+            <div className="flex items-center justify-between mb-2.5">
+              <h4 className="font-serif text-base font-semibold text-charcoal">
                 Priority Intervention Hotspots
               </h4>
-              <span className="text-xs font-mono px-2 py-0.5 rounded bg-surface-subtle border border-border text-secondary">
-                Top Elevated Demand
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-subtle border border-border text-secondary">
+                Excess &ge; 2.5x
               </span>
             </div>
 

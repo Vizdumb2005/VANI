@@ -52,6 +52,8 @@ export const McdaSensitivityTool: React.FC<McdaSensitivityToolProps> = ({
     return { scored, spearman };
   }, [priorities, w1, w2, w3, w4, baselineRanks]);
 
+  const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
+
   const handleReset = () => {
     setW1(0.40);
     setW2(0.25);
@@ -60,40 +62,60 @@ export const McdaSensitivityTool: React.FC<McdaSensitivityToolProps> = ({
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h3 className="text-xl font-serif text-charcoal font-semibold">
-            MCDA Policy Prioritization Matrix
+    <div className="space-y-4">
+      {/* Clean Dashboard Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1">
+        <div className="flex items-center gap-3">
+          <h3 className="text-lg font-serif text-charcoal font-semibold">
+            MCDA Prioritization Matrix
           </h3>
-          <p className="text-xs text-secondary mt-0.5">
-            Real-time sensitivity vectors balancing citizen demand intensity against deprivation deficits, population served, and national scheme alignment.
-          </p>
+          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-surface-subtle border border-border text-secondary">
+            Spearman &rho; = {computedProjects.spearman.toFixed(3)} ({computedProjects.spearman >= 0.80 ? 'Robust' : 'Moderate'})
+          </span>
         </div>
 
         <div className="flex items-center gap-2">
+          {/* View Mode Toggle */}
+          <div className="flex rounded border border-border bg-surface-subtle p-0.5 text-xs font-mono">
+            <button
+              onClick={() => setViewMode('table')}
+              className={`px-2.5 py-1 rounded transition-colors ${
+                viewMode === 'table' ? 'bg-surface font-medium text-charcoal shadow-sm' : 'text-secondary hover:text-charcoal'
+              }`}
+            >
+              Table View
+            </button>
+            <button
+              onClick={() => setViewMode('cards')}
+              className={`px-2.5 py-1 rounded transition-colors ${
+                viewMode === 'cards' ? 'bg-surface font-medium text-charcoal shadow-sm' : 'text-secondary hover:text-charcoal'
+              }`}
+            >
+              Cards View
+            </button>
+          </div>
+
           <button
             onClick={handleReset}
-            className="px-3 py-1.5 text-xs font-mono border border-border rounded bg-surface hover:bg-surface-subtle transition-colors text-charcoal"
+            className="px-2.5 py-1 text-xs font-mono border border-border rounded bg-surface hover:bg-surface-subtle transition-colors text-charcoal"
           >
-            Reset Baseline Weights
+            Reset
           </button>
           <button
             onClick={() => onOpenDossier(computedProjects.scored[0])}
-            className="px-3.5 py-1.5 text-xs font-medium rounded bg-charcoal text-white hover:bg-charcoal/90 transition-colors shadow-subtle"
+            className="px-3 py-1 text-xs font-medium rounded bg-charcoal text-white hover:bg-charcoal/90 transition-colors shadow-subtle"
           >
-            Export Top Dossier
+            Export Dossier
           </button>
         </div>
       </div>
 
-      {/* Sliders Card */}
-      <div className="border border-border rounded-card bg-surface p-5">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="space-y-1.5">
+      {/* Sliders Card (Compact) */}
+      <div className="border border-border rounded-card bg-surface p-3.5">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="space-y-1">
             <div className="flex justify-between items-center text-xs">
-              <span className="font-mono text-secondary">w1 · Demand Intensity</span>
+              <span className="font-mono text-secondary text-[11px]">w1 · Demand Intensity</span>
               <span className="font-mono font-semibold text-charcoal">{w1.toFixed(2)}</span>
             </div>
             <input
@@ -103,14 +125,13 @@ export const McdaSensitivityTool: React.FC<McdaSensitivityToolProps> = ({
               step="0.05"
               value={w1}
               onChange={(e) => setW1(parseFloat(e.target.value))}
-              className="w-full h-1.5 bg-border rounded-lg appearance-none cursor-pointer accent-charcoal"
+              className="w-full h-1 bg-border rounded-lg appearance-none cursor-pointer accent-charcoal"
             />
-            <p className="text-[10px] text-secondary">Hotspot excess ratio & volume</p>
           </div>
 
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             <div className="flex justify-between items-center text-xs">
-              <span className="font-mono text-secondary">w2 · Deprivation Gap</span>
+              <span className="font-mono text-secondary text-[11px]">w2 · Deprivation Gap</span>
               <span className="font-mono font-semibold text-charcoal">{w2.toFixed(2)}</span>
             </div>
             <input
@@ -120,14 +141,13 @@ export const McdaSensitivityTool: React.FC<McdaSensitivityToolProps> = ({
               step="0.05"
               value={w2}
               onChange={(e) => setW2(parseFloat(e.target.value))}
-              className="w-full h-1.5 bg-border rounded-lg appearance-none cursor-pointer accent-charcoal"
+              className="w-full h-1 bg-border rounded-lg appearance-none cursor-pointer accent-charcoal"
             />
-            <p className="text-[10px] text-secondary">Census & NFHS-5 multidimensional index</p>
           </div>
 
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             <div className="flex justify-between items-center text-xs">
-              <span className="font-mono text-secondary">w3 · Population Density</span>
+              <span className="font-mono text-secondary text-[11px]">w3 · Population Density</span>
               <span className="font-mono font-semibold text-charcoal">{w3.toFixed(2)}</span>
             </div>
             <input
@@ -137,14 +157,13 @@ export const McdaSensitivityTool: React.FC<McdaSensitivityToolProps> = ({
               step="0.05"
               value={w3}
               onChange={(e) => setW3(parseFloat(e.target.value))}
-              className="w-full h-1.5 bg-border rounded-lg appearance-none cursor-pointer accent-charcoal"
+              className="w-full h-1 bg-border rounded-lg appearance-none cursor-pointer accent-charcoal"
             />
-            <p className="text-[10px] text-secondary">Habitation reach per unit expenditure</p>
           </div>
 
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             <div className="flex justify-between items-center text-xs">
-              <span className="font-mono text-secondary">w4 · Scheme Alignment</span>
+              <span className="font-mono text-secondary text-[11px]">w4 · Scheme Alignment</span>
               <span className="font-mono font-semibold text-charcoal">{w4.toFixed(2)}</span>
             </div>
             <input
@@ -154,108 +173,167 @@ export const McdaSensitivityTool: React.FC<McdaSensitivityToolProps> = ({
               step="0.05"
               value={w4}
               onChange={(e) => setW4(parseFloat(e.target.value))}
-              className="w-full h-1.5 bg-border rounded-lg appearance-none cursor-pointer accent-charcoal"
+              className="w-full h-1 bg-border rounded-lg appearance-none cursor-pointer accent-charcoal"
             />
-            <p className="text-[10px] text-secondary">PMGSY, JJM, IPDS scheme mapping</p>
           </div>
-        </div>
-
-        {/* Robustness metric bar */}
-        <div className="mt-4 pt-3 border-t border-border flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-          <div className="flex items-center gap-3">
-            <span className="font-mono uppercase text-secondary">Ranking Stability:</span>
-            <span className="font-mono font-semibold text-charcoal">
-              Spearman rho = {computedProjects.spearman.toFixed(3)}
-            </span>
-            <span className={`px-2 py-0.5 rounded text-[10px] font-mono ${
-              computedProjects.spearman >= 0.80
-                ? 'bg-pastel-green text-pastel-green-text font-medium'
-                : 'bg-pastel-yellow text-pastel-yellow-text'
-            }`}>
-              {computedProjects.spearman >= 0.80 ? 'Robust (rho >= 0.80)' : 'Moderate Variance'}
-            </span>
-          </div>
-          <span className="text-secondary text-[11px] font-mono">
-            Active Priority Formula = (w1*D + w2*G + w3*P + w4*S) / (w1+w2+w3+w4)
-          </span>
         </div>
       </div>
 
-      {/* Priority Project Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {computedProjects.scored.slice(0, 6).map((p, idx) => {
-          const score = p.dynamicScore || p.priority;
-          const pct = Math.min(100, Math.round(score * 100));
+      {/* Table View */}
+      {viewMode === 'table' ? (
+        <div className="border border-border rounded-card bg-surface overflow-hidden">
+          <div className="overflow-x-auto max-h-[460px]">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-surface-subtle border-b border-border text-secondary font-mono uppercase text-[10px] tracking-wider sticky top-0 z-10">
+                <tr>
+                  <th className="py-2.5 px-3">Rank</th>
+                  <th className="py-2.5 px-3">Sector</th>
+                  <th className="py-2.5 px-3">Location</th>
+                  <th className="py-2.5 px-3 text-right">Reports (Excess)</th>
+                  <th className="py-2.5 px-3 text-right">Deprivation</th>
+                  <th className="py-2.5 px-3">Matched Scheme</th>
+                  <th className="py-2.5 px-3 text-right">Cost Proxy</th>
+                  <th className="py-2.5 px-3 text-right">Priority Score</th>
+                  <th className="py-2.5 px-3 text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {computedProjects.scored.map((p, idx) => {
+                  const score = p.dynamicScore || p.priority;
+                  const pct = Math.min(100, Math.round(score * 100));
 
-          return (
-            <div
-              key={idx}
-              className="border border-border rounded-card bg-surface p-5 flex flex-col justify-between hover:shadow-subtle transition-all"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[11px] font-mono font-semibold px-2 py-0.5 rounded bg-surface-subtle border border-border text-charcoal">
-                    Priority #{idx + 1}
-                  </span>
-                  <span className="font-mono text-xs font-semibold text-charcoal">
-                    Score: {score.toFixed(3)}
-                  </span>
-                </div>
+                  return (
+                    <tr key={idx} className="hover:bg-surface-subtle transition-colors">
+                      <td className="py-2 px-3 font-mono font-semibold text-charcoal">
+                        #{idx + 1}
+                      </td>
+                      <td className="py-2 px-3 font-medium capitalize">
+                        <span className="inline-block px-2 py-0.5 rounded bg-surface-subtle border border-border text-[11px] font-mono">
+                          {p.category.replace(/_/g, ' ')}
+                        </span>
+                      </td>
+                      <td className="py-2 px-3 font-medium text-charcoal">
+                        {p.location}{' '}
+                        <span className="text-[10px] font-mono text-secondary">
+                          (LGD {p.lgd_district_code})
+                        </span>
+                      </td>
+                      <td className="py-2 px-3 text-right font-mono">
+                        {p.demand_intensity.report_count}{' '}
+                        <span className="text-pastel-red-text font-semibold">
+                          ({p.demand_intensity.excess_ratio}x)
+                        </span>
+                      </td>
+                      <td className="py-2 px-3 text-right font-mono">
+                        {p.deprivation_score}
+                      </td>
+                      <td className="py-2 px-3 text-secondary">
+                        {p.scheme_match.scheme}
+                      </td>
+                      <td className="py-2 px-3 text-right font-mono">
+                        ₹{p.cost_per_beneficiary_proxy}
+                      </td>
+                      <td className="py-2 px-3 text-right font-mono">
+                        <div className="flex items-center justify-end gap-2">
+                          <div className="w-14 bg-surface-subtle h-1.5 rounded-full overflow-hidden">
+                            <div className="bg-charcoal h-full" style={{ width: `${pct}%` }} />
+                          </div>
+                          <span className="font-semibold text-charcoal">{score.toFixed(3)}</span>
+                        </div>
+                      </td>
+                      <td className="py-2 px-3 text-center">
+                        <div className="flex items-center justify-center gap-1.5">
+                          <button
+                            onClick={() => onOpenMemo((p.origIdx ?? 0) + 1)}
+                            className="px-2 py-0.5 text-[11px] font-mono border border-border rounded hover:bg-charcoal hover:text-white transition-colors"
+                          >
+                            Memo
+                          </button>
+                          <button
+                            onClick={() => onOpenDossier(p)}
+                            className="px-2 py-0.5 text-[11px] font-mono border border-border rounded text-secondary hover:text-charcoal hover:bg-surface-subtle transition-colors"
+                          >
+                            Dossier
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : (
+        /* Compact Cards Grid */
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {computedProjects.scored.slice(0, 6).map((p, idx) => {
+            const score = p.dynamicScore || p.priority;
+            const pct = Math.min(100, Math.round(score * 100));
 
-                <h4 className="font-serif text-lg font-semibold text-charcoal capitalize">
-                  {p.category.replace(/_/g, ' ')}
-                </h4>
-                <p className="text-xs font-mono text-secondary mb-3">
-                  {p.location} (LGD {p.lgd_district_code})
-                </p>
-
-                <div className="space-y-1.5 text-xs py-2 border-t border-border">
-                  <div className="flex justify-between">
-                    <span className="text-secondary">Demand Intensity:</span>
-                    <span className="font-medium text-charcoal">
-                      {p.demand_intensity.report_count} reports ({p.demand_intensity.excess_ratio}x)
+            return (
+              <div
+                key={idx}
+                className="border border-border rounded-card bg-surface p-4 flex flex-col justify-between hover:shadow-subtle transition-all"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-surface-subtle border border-border text-charcoal">
+                      Priority #{idx + 1}
+                    </span>
+                    <span className="font-mono text-xs font-semibold text-charcoal">
+                      {score.toFixed(3)}
                     </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-secondary">Deprivation Score:</span>
-                    <span className="font-medium text-charcoal">{p.deprivation_score}</span>
+
+                  <h4 className="font-serif text-base font-semibold text-charcoal capitalize">
+                    {p.category.replace(/_/g, ' ')}
+                  </h4>
+                  <p className="text-[11px] font-mono text-secondary mb-2">
+                    {p.location} (LGD {p.lgd_district_code})
+                  </p>
+
+                  <div className="space-y-1 text-xs py-1.5 border-t border-border text-[11px]">
+                    <div className="flex justify-between">
+                      <span className="text-secondary">Demand:</span>
+                      <span className="font-medium text-charcoal">
+                        {p.demand_intensity.report_count} ({p.demand_intensity.excess_ratio}x)
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-secondary">Scheme:</span>
+                      <span className="font-medium text-charcoal truncate max-w-[180px]">{p.scheme_match.scheme}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-secondary">Cost Proxy:</span>
+                      <span className="font-medium text-charcoal">₹{p.cost_per_beneficiary_proxy}</span>
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-secondary">Scheme Match:</span>
-                    <span className="font-medium text-charcoal">{p.scheme_match.scheme}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-secondary">Beneficiary Cost Proxy:</span>
-                    <span className="font-medium text-charcoal">INR {p.cost_per_beneficiary_proxy}</span>
+
+                  <div className="w-full bg-surface-subtle h-1 rounded-full overflow-hidden mt-2 mb-3">
+                    <div className="bg-charcoal h-full" style={{ width: `${pct}%` }} />
                   </div>
                 </div>
 
-                <div className="w-full bg-surface-subtle h-1.5 rounded-full overflow-hidden mt-3 mb-4">
-                  <div
-                    className="bg-charcoal h-full transition-all duration-300"
-                    style={{ width: `${pct}%` }}
-                  />
+                <div className="flex items-center gap-2 pt-2 border-t border-border">
+                  <button
+                    onClick={() => onOpenMemo((p.origIdx ?? 0) + 1)}
+                    className="flex-1 py-1 text-xs font-mono border border-border rounded bg-surface-subtle hover:bg-charcoal hover:text-white transition-colors"
+                  >
+                    Cabinet Brief
+                  </button>
+                  <button
+                    onClick={() => onOpenDossier(p)}
+                    className="flex-1 py-1 text-xs font-mono border border-border rounded bg-surface hover:bg-surface-subtle transition-colors text-secondary hover:text-charcoal"
+                  >
+                    Dossier
+                  </button>
                 </div>
               </div>
-
-              <div className="flex items-center gap-2 pt-2 border-t border-border">
-                <button
-                  onClick={() => onOpenMemo((p.origIdx ?? 0) + 1)}
-                  className="flex-1 py-1.5 text-xs font-mono border border-border rounded bg-surface-subtle hover:bg-charcoal hover:text-white transition-colors"
-                >
-                  Cabinet Brief
-                </button>
-                <button
-                  onClick={() => onOpenDossier(p)}
-                  className="flex-1 py-1.5 text-xs font-mono border border-border rounded bg-surface hover:bg-surface-subtle transition-colors text-secondary hover:text-charcoal"
-                >
-                  Dossier
-                </button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

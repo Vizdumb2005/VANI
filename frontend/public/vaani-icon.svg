@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" fill="none">
+  <rect width="32" height="32" rx="8" fill="#141416"/>
+  <!-- Outer Convergent Vector / Voice Crest -->
+  <path d="M7 11.5L16 23.5L25 11.5" stroke="#F4F4F5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Inner Harmonic Resonance Wave -->
+  <path d="M11.5 11.5L16 17.5L20.5 11.5" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Sovereign Apex Beacon Pulse -->
+  <circle cx="16" cy="7" r="1.5" fill="#10B981"/>
+</svg>

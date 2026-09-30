@@ -1,4 +1,4 @@
-export type ActiveView = 'dashboard' | 'scm' | 'gateways' | 'brics' | 'compliance';
+export type ActiveView = 'dashboard' | 'gis' | 'mcda' | 'gateways' | 'cpgrams' | 'scm' | 'brics' | 'compliance';
 
 export interface GisHotspot {
   district: string;

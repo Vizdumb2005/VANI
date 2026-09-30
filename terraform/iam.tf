@@ -11,6 +11,10 @@ resource "google_service_account" "vaani_worker_sa" {
   display_name = "VAANI Async Background Worker Service Account"
 }
 
+data "google_project" "current" {
+  project_id = var.project_id
+}
+
 # 2. Least-Privilege IAM Bindings for Gateway
 resource "google_project_iam_member" "gateway_vertex" {
   project = var.project_id
@@ -36,6 +40,64 @@ resource "google_project_iam_member" "gateway_secrets" {
   member  = "serviceAccount:${google_service_account.vaani_gateway_sa.email}"
 }
 
+resource "google_project_iam_member" "gateway_firestore" {
+  project = var.project_id
+  role    = "roles/datastore.user"
+  member  = "serviceAccount:${google_service_account.vaani_gateway_sa.email}"
+}
+
+resource "google_project_iam_member" "gateway_bigquery_job_user" {
+  project = var.project_id
+  role    = "roles/bigquery.jobUser"
+  member  = "serviceAccount:${google_service_account.vaani_gateway_sa.email}"
+}
+
+resource "google_project_iam_member" "worker_firestore" {
+  project = var.project_id
+  role    = "roles/datastore.user"
+  member  = "serviceAccount:${google_service_account.vaani_worker_sa.email}"
+}
+
+resource "google_project_iam_member" "worker_bigquery" {
+  project = var.project_id
+  role    = "roles/bigquery.dataEditor"
+  member  = "serviceAccount:${google_service_account.vaani_worker_sa.email}"
+}
+
+resource "google_project_iam_member" "worker_bigquery_job_user" {
+  project = var.project_id
+  role    = "roles/bigquery.jobUser"
+  member  = "serviceAccount:${google_service_account.vaani_worker_sa.email}"
+}
+
+resource "google_project_iam_member" "worker_secrets" {
+  project = var.project_id
+  role    = "roles/secretmanager.secretAccessor"
+  member  = "serviceAccount:${google_service_account.vaani_worker_sa.email}"
+}
+
+resource "google_cloud_run_v2_service_iam_member" "worker_invoker" {
+  project  = var.project_id
+  location = var.region
+  name     = google_cloud_run_v2_service.vaani_worker.name
+  role     = "roles/run.invoker"
+  member   = "serviceAccount:${google_service_account.vaani_gateway_sa.email}"
+}
+
+resource "google_cloud_run_v2_service_iam_member" "gateway_public_invoker" {
+  project  = var.project_id
+  location = var.region
+  name     = google_cloud_run_v2_service.vaani_gateway_primary.name
+  role     = "roles/run.invoker"
+  member   = "allUsers"
+}
+
+resource "google_service_account_iam_member" "pubsub_token_creator" {
+  service_account_id = google_service_account.vaani_gateway_sa.name
+  role               = "roles/iam.serviceAccountTokenCreator"
+  member             = "serviceAccount:service-${data.google_project.current.number}@gcp-sa-pubsub.iam.gserviceaccount.com"
+}
+
 # 3. Secret Manager Secrets
 resource "google_secret_manager_secret" "hmac_salt" {
   secret_id = "vaani-hmac-salt"
@@ -53,6 +115,27 @@ resource "google_secret_manager_secret" "whatsapp_app_secret" {
 
 resource "google_secret_manager_secret" "telegram_bot_secret" {
   secret_id = "vaani-telegram-bot-secret"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret" "whatsapp_verify_token" {
+  secret_id = "vaani-whatsapp-verify-token"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret" "rapidpro_api_token" {
+  secret_id = "vaani-rapidpro-api-token"
+  replication {
+    auto {}
+  }
+}
+
+resource "google_secret_manager_secret" "twilio_auth_token" {
+  secret_id = "vaani-twilio-auth-token"
   replication {
     auto {}
   }

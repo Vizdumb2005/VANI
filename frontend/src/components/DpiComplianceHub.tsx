@@ -6,59 +6,72 @@ interface DpiComplianceHubProps {
   initialCpgramsBatch: CpgramsBatch;
   onOpenPolicy: (doc: 'privacy' | 'terms' | 'compliance' | 'dpo' | 'openapi') => void;
   onShowToast: (msg: string) => void;
+  canDispatch: boolean;
+  operatorToken: string | null;
 }
 
 export const DpiComplianceHub: React.FC<DpiComplianceHubProps> = ({
   initialCpgramsBatch,
   onOpenPolicy,
   onShowToast,
+  canDispatch,
+  operatorToken,
 }) => {
   const [cpgramsBatch, setCpgramsBatch] = useState<CpgramsBatch>(initialCpgramsBatch);
   const [isSyncing, setIsSyncing] = useState<boolean>(false);
 
   const handleSync = async () => {
+    if (!canDispatch || !operatorToken) {
+      onShowToast("Operator sign-in is required before CPGRAMS dispatch");
+      return;
+    }
     setIsSyncing(true);
-    const updated = await syncCpgramsBatch();
-    setIsSyncing(false);
-    setCpgramsBatch(updated);
-    onShowToast("Batch synchronized with DARPG CPGRAMS endpoint");
+    try {
+      const updated = await syncCpgramsBatch(5, operatorToken);
+      setCpgramsBatch(updated);
+      onShowToast("Batch synchronized with DARPG CPGRAMS endpoint");
+    } catch (error) {
+      onShowToast(error instanceof Error ? error.message : "CPGRAMS dispatch failed");
+    } finally {
+      setIsSyncing(false);
+    }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h3 className="text-xl font-serif text-charcoal font-semibold">
-            Institutional DPI & CPGRAMS Integration Ledger
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-1">
+        <div className="flex items-center gap-3">
+          <h3 className="text-lg font-serif text-charcoal font-semibold">
+            Institutional CPGRAMS Dispatch Ledger
           </h3>
-          <p className="text-sm text-secondary mt-0.5">
-            Bi-directional push adapter for DARPG Centralized Public Grievance Redress system and State CM Helplines.
-          </p>
+          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-pastel-green text-pastel-green-text font-medium">
+            DARPG v2 Protocol
+          </span>
         </div>
 
-        <div className="flex flex-wrap gap-2 text-xs font-mono">
+        <div className="flex flex-wrap gap-1.5 text-xs font-mono">
           <button
             onClick={() => onOpenPolicy('privacy')}
-            className="px-3 py-1.5 rounded border border-border bg-surface hover:bg-surface-subtle transition-colors text-charcoal"
+            className="px-2.5 py-1 rounded border border-border bg-surface hover:bg-surface-subtle transition-colors text-charcoal text-[11px]"
           >
             Privacy Charter
           </button>
           <button
             onClick={() => onOpenPolicy('terms')}
-            className="px-3 py-1.5 rounded border border-border bg-surface hover:bg-surface-subtle transition-colors text-charcoal"
+            className="px-2.5 py-1 rounded border border-border bg-surface hover:bg-surface-subtle transition-colors text-charcoal text-[11px]"
           >
             Terms of Use
           </button>
           <button
             onClick={() => onOpenPolicy('compliance')}
-            className="px-3 py-1.5 rounded border border-border bg-surface hover:bg-surface-subtle transition-colors text-charcoal"
+            className="px-2.5 py-1 rounded border border-border bg-surface hover:bg-surface-subtle transition-colors text-charcoal text-[11px]"
           >
             Audit Certificate
           </button>
           <button
             onClick={() => onOpenPolicy('dpo')}
-            className="px-3 py-1.5 rounded border border-border bg-surface hover:bg-surface-subtle transition-colors text-charcoal"
+            className="px-2.5 py-1 rounded border border-border bg-surface hover:bg-surface-subtle transition-colors text-charcoal text-[11px]"
           >
             DPO Redressal
           </button>
@@ -66,29 +79,30 @@ export const DpiComplianceHub: React.FC<DpiComplianceHubProps> = ({
       </div>
 
       {/* CPGRAMS Panel */}
-      <div className="border border-border rounded-card bg-surface p-5 space-y-4">
+      <div className="border border-border rounded-card bg-surface p-4 space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <div className="text-xs font-mono uppercase tracking-wider text-secondary">
-              DARPG CPGRAMS & State CM Portal Bi-Directional Adapter
-            </div>
-            <h4 className="font-serif text-lg font-semibold text-charcoal mt-0.5">
-              Institutional Hotspot Dispatch Ledger
+            <h4 className="font-serif text-base font-semibold text-charcoal">
+              Dispatched Institutional Batches
             </h4>
+            <span className="text-[11px] font-mono text-secondary">
+              Line Ministry Integration Ledger
+            </span>
           </div>
-          <button
-            onClick={handleSync}
-            disabled={isSyncing}
-            className="px-4 py-2 text-xs font-medium uppercase tracking-wider rounded bg-charcoal text-white hover:bg-charcoal/90 transition-colors shadow-subtle disabled:opacity-50"
-          >
-            {isSyncing ? 'Dispatching Batches...' : 'Sync Priority Batches to CPGRAMS'}
-          </button>
+          {canDispatch ? (
+            <button
+              onClick={handleSync}
+              disabled={isSyncing}
+              className="px-3.5 py-1.5 text-xs font-medium uppercase tracking-wider rounded bg-charcoal text-white hover:bg-charcoal/90 transition-colors shadow-subtle disabled:opacity-50"
+            >
+              {isSyncing ? 'Dispatching...' : 'Sync Priority Batches'}
+            </button>
+          ) : (
+            <span className="rounded border border-border px-2.5 py-1 text-[11px] font-mono text-secondary">
+              Read-only viewer ledger
+            </span>
+          )}
         </div>
-
-        <p className="text-xs text-secondary leading-relaxed">
-          VAANI does not replace CPGRAMS. It acts as the Sovereign Ingestion and AI Intelligence Layer that verifies damage,
-          resolves LGD spatial codes, aggregates co-located citizen reports into demand hotspots, and dispatches standardized batches directly to line ministries.
-        </p>
 
         {/* Ledger table */}
         <div className="border border-border rounded overflow-hidden">

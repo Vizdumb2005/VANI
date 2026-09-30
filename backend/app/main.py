@@ -14,6 +14,7 @@ Provides:
 - BRICS Cross-Border Scalability Engine (/brics/profiles)
 - Statutory Compliance, DPDP Act 2023, DPGA, NDGFP (/compliance, /privacy, /terms, /dpo)
 """
+import base64
 import json
 import logging
 import os
@@ -23,12 +24,18 @@ import uuid
 from pathlib import Path
 from typing import Optional, List, Dict, Any
 
-from fastapi import FastAPI, HTTPException, Query, Form, Header, Depends
+from fastapi import FastAPI, HTTPException, Query, Form, Header, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import HTMLResponse, JSONResponse
+from starlette.responses import Response
 
-# Add project root to sys.path to access workflow utilities seamlessly
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
+from .core.auth import Principal, get_current_principal, require_operator, require_pubsub_identity
+from .services.firestore_store import FirestoreStore
+from .core.gcp_clients import get_vertex_gemini_client
+
+# Add the configured project root to sys.path for optional workflow adapters.
+PROJECT_ROOT = Path(os.getenv("APP_BASE_DIR", str(Path(__file__).resolve().parents[2])))
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 if str(PROJECT_ROOT / "workflow") not in sys.path:
@@ -64,6 +71,9 @@ except ImportError:
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 logger = logging.getLogger("vaani.main")
 
+# Validate secrets and identity configuration before accepting traffic.
+settings.validate_runtime()
+
 app = FastAPI(
     title="VAANI — Sovereign DPI Platform (GCP)",
     version="2.0.0",
@@ -76,14 +86,32 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-# Cross-Origin Resource Sharing (CORS)
+# Cross-Origin Resource Sharing (CORS). Never combine credentials with '*'.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=settings.cors_origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "Idempotency-Key", "X-Hub-Signature-256", "X-Telegram-Bot-Api-Secret-Token"],
 )
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=settings.allowed_hosts)
+
+
+@app.middleware("http")
+async def enforce_body_limit(request: Request, call_next):
+    """Reject oversized payloads before image/audio parsing or model calls."""
+    content_length = request.headers.get("content-length")
+    if content_length:
+        try:
+            parsed_length = int(content_length)
+        except ValueError:
+            return JSONResponse(status_code=400, content={"detail": "Invalid Content-Length header"})
+        if parsed_length < 0:
+            return JSONResponse(status_code=400, content={"detail": "Invalid Content-Length header"})
+        if parsed_length > settings.MAX_BODY_BYTES:
+            return JSONResponse(status_code=413, content={"detail": "Request body too large"})
+    return await call_next(request)
+
 
 # Register Omnichannel Webhook Routers
 app.include_router(whatsapp_router)
@@ -93,6 +121,7 @@ app.include_router(streaming_router)
 app.include_router(rapidpro_router)
 
 lakehouse = BigQueryLakehouse()
+operational_store = FirestoreStore()
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -115,13 +144,20 @@ def get_presentation():
 
 
 @app.post("/requests", response_model=CitizenRequestResponse)
-def submit_citizen_request(req: CitizenRequest):
-    """Omnichannel citizen intake endpoint.
-    
-    Accepts text or voice payloads from WhatsApp, Web, Telegram, or IVR.
-    Strictly enforces DPDP Act 2023 §8(7) zero audio retention and pseudonymization.
-    """
-    t0 = time.time()
+def submit_citizen_request(
+    req: CitizenRequest,
+    idempotency_key: Optional[str] = Header(default=None, alias="Idempotency-Key"),
+):
+    """Public citizen intake with bounded payloads and retry-safe persistence."""
+    if req.text and len(req.text) > settings.MAX_TEXT_LENGTH:
+        raise HTTPException(status_code=413, detail="Text payload too large")
+    if req.image_base64 and len(req.image_base64) > settings.MAX_IMAGE_BYTES * 2:
+        raise HTTPException(status_code=413, detail="Image payload too large")
+
+    existing_response = operational_store.get_idempotent_response(idempotency_key)
+    if existing_response:
+        return existing_response
+
     rung_used = "n/a (text channel)"
     processed_text = ""
 
@@ -132,7 +168,7 @@ def submit_citizen_request(req: CitizenRequest):
             language_hint="und",
             cached_reference=req.cached_reference or req.text,
         )
-        processed_text = res["transcript"]
+        processed_text = redact_pii(res["transcript"])
         rung_used = res["rung"]
     else:
         if not req.text:
@@ -182,11 +218,10 @@ def submit_citizen_request(req: CitizenRequest):
     )
     voice_reply = synthesize_speech_tts(text=dual_reply["speech_script"], language_code=detected_lang)
 
-    # Asynchronously publish to Pub/Sub and persist in BigQuery Lakehouse
-    publish_intake_event(record)
-    lakehouse.insert_intake_record(record)
+    event_published = publish_intake_event(record)
+    analytics_persisted = lakehouse.insert_intake_record(record)
 
-    return {
+    response_payload = {
         "request_id": req_id,
         "language": detected_lang,
         "transcript_preview": processed_text[:120],
@@ -196,7 +231,56 @@ def submit_citizen_request(req: CitizenRequest):
         "text_reply": dual_reply["text_reply"],
         "voice_reply": voice_reply,
         "persisted_at": now_iso,
+        "operational_store": operational_store.health()["store"],
+        "event_published": event_published,
+        "analytics_persisted": analytics_persisted,
     }
+    record["event_published"] = event_published
+    record["analytics_persisted"] = analytics_persisted
+    try:
+        operational_store.save_request(
+            record,
+            idempotency_key=idempotency_key,
+            response_payload=response_payload,
+        )
+        operational_store.write_audit_event(
+            action="citizen_request_created",
+            actor={"sub": "anonymous", "role": "citizen"},
+            request_id=req_id,
+            metadata={"channel": req.channel, "language": detected_lang},
+        )
+    except Exception as exc:
+        logger.exception("Operational persistence failed for %s", req_id)
+        raise HTTPException(status_code=503, detail="Operational store unavailable") from exc
+
+    return response_payload
+
+
+@app.post("/pubsub/intake")
+async def receive_pubsub_intake(
+    request: Request,
+    _pubsub_identity: dict[str, Any] = Depends(require_pubsub_identity),
+):
+    """Consume a Pub/Sub push envelope and persist the already-sanitized event.
+
+    Cloud Run IAM provides the outer OIDC authorization in production; the
+    application still validates the envelope and uses the request ID as the
+    idempotency key so retries are safe.
+    """
+    envelope = await request.json()
+    message = envelope.get("message") or {}
+    encoded = message.get("data")
+    if not encoded:
+        raise HTTPException(status_code=400, detail="Pub/Sub message data missing")
+    try:
+        record = json.loads(base64.b64decode(encoded).decode("utf-8"))
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail="Invalid Pub/Sub message data") from exc
+    request_id = str(record.get("request_id", ""))
+    if not request_id:
+        raise HTTPException(status_code=422, detail="request_id missing from intake event")
+    operational_store.save_request(record, idempotency_key=request_id)
+    return {"status": "acknowledged", "request_id": request_id}
 
 
 @app.get("/signals")
@@ -247,8 +331,10 @@ def cpgrams_status():
 
 
 @app.post("/integrations/cpgrams/sync")
-def sync_cpgrams(batch_size: int = 10):
-    """Dispatches high-priority demand hotspots directly to DARPG CPGRAMS v2."""
+def sync_cpgrams(batch_size: int = 10, principal: Principal = Depends(require_operator)):
+    """Dispatch high-priority hotspots; only allowlisted operators may trigger it."""
+    if batch_size < 1 or batch_size > 50:
+        raise HTTPException(status_code=422, detail="batch_size must be between 1 and 50")
     ranking_data = compute_mcda_rankings()
     top_cards = ranking_data.get("top_recommendations", [])[:batch_size]
 
@@ -262,7 +348,13 @@ def sync_cpgrams(batch_size: int = 10):
         }
         for c in top_cards
     ]
-    return sync_hotspots_to_cpgrams(hotspots)
+    result = sync_hotspots_to_cpgrams(hotspots)
+    operational_store.write_audit_event(
+        action="cpgrams_sync_requested",
+        actor=principal.as_dict(),
+        metadata={"batch_size": batch_size, "gateway_status": result.get("gateway_status")},
+    )
+    return result
 
 
 @app.get("/brics/profiles")
@@ -285,19 +377,27 @@ def get_brics_profile(iso: str):
     return {"iso": iso.upper(), "message": "BRICS profile loaded."}
 
 
+@app.get("/auth/me")
+def auth_me(principal: Principal = Depends(get_current_principal)):
+    """Return the current public/viewer/operator identity without exposing token claims."""
+    return {"authenticated": principal.sub != "anonymous", **principal.as_dict()}
+
+
 @app.get("/google-ai/status")
 def google_ai_status():
-    """Vertex AI and Google Gemini 2.0 integration health."""
+    """Report configured Gemini mode instead of claiming a live connection unconditionally."""
+    client_ready = get_vertex_gemini_client() is not None
     return {
-        "status": "connected",
+        "status": "configured" if client_ready else "degraded",
+        "mode": "vertex_ai" if settings.USE_VERTEX_AI else "gemini_api_key",
         "platform": "Google Cloud Platform (GCP)",
         "service": "Vertex AI SDK & Model Garden",
         "primary_vision_model": settings.GEMINI_MODEL_VISION,
         "primary_policy_model": settings.GEMINI_MODEL_POLICY,
         "capabilities": [
-            "Gemini 2.0 Multimodal Vision Damage Inspection (IRC/PMGSY/JJM Calibrated)",
-            "Vertex AI IndicConformer & IndicTTS GPU Speech Ladder",
-            "Executive Cabinet Memorandum Synthesis Agent with PM GatiShakti Alignment",
+            "Gemini multimodal damage inspection",
+            "Multilingual citizen reply generation",
+            "Executive policy brief synthesis",
         ],
     }
 
@@ -308,8 +408,12 @@ def health():
     return {
         "status": "ok",
         "dpg_initiative": "VAANI — Voice-to-Network Aggregated National Intelligence",
-        "infrastructure": "Google Cloud Platform (Cloud Run, Vertex AI, BigQuery Lakehouse)",
+        "infrastructure": "Google Cloud Platform (Cloud Run, Firestore, Vertex AI, BigQuery Lakehouse)",
         "region": settings.GCP_REGION,
+        "dependencies": {
+            "firestore": operational_store.health(),
+            "gemini": "configured" if get_vertex_gemini_client() is not None else "degraded",
+        },
         "supported_languages_count": len(ALL_22_INDIAN_LANGUAGES),
         "supported_languages": ALL_22_INDIAN_LANGUAGES,
         "asr_degradation_ladder": {

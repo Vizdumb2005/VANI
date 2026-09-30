@@ -92,7 +92,11 @@ class BigQueryLakehouse:
             except Exception as e:
                 logger.warning(f"BigQuery insert exception: {e}")
 
-        # Fallback: append to local jsonl
+        # Local JSONL is a deterministic development fixture, never a production
+        # durability substitute for BigQuery or Firestore.
+        if settings.ENVIRONMENT.lower() not in {"development", "test"}:
+            logger.error("BigQuery persistence failed and local fallback is disabled in production")
+            return False
         raw_path = settings.DATA_DIR / "raw" / "requests.jsonl"
         raw_path.parent.mkdir(parents=True, exist_ok=True)
         with raw_path.open("a", encoding="utf-8") as f:

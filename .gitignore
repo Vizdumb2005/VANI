@@ -69,9 +69,22 @@ htmlcov/
 .DS_Store
 Thumbs.db
 
-# Logs
+# Logs & Temporary Files
 *.log
 results/rebuild.log
+.tmp/
+tmp/
+*.bak
+*.orig
 
-# Ensure essential source directories are NOT ignored
+# Credentials, Keys & Secrets (Zero Leakage Invariant)
+*.key
+*.pem
+service-account*.json
+gcp-credentials*.json
+*.p12
+
+# Ensure essential source directories and examples are NOT ignored
 !frontend/src/lib/
+!*.env.example
+!*.tfvars.example

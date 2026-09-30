@@ -51,11 +51,14 @@ async def handle_whatsapp_webhook(
     content_type = request.headers.get("content-type", "")
     raw_body = await request.body()
 
-    # Verify HMAC-SHA256 signature if signature header is provided
-    if x_hub_signature_256:
-        if not verify_whatsapp_signature(raw_body, x_hub_signature_256):
-            logger.warning("WhatsApp HMAC-SHA256 signature mismatch.")
-            raise HTTPException(status_code=401, detail="Invalid HMAC-SHA256 webhook signature")
+    # Meta signatures are mandatory outside local development. A missing header
+    # must never silently downgrade an internet-facing webhook to anonymous mode.
+    if not x_hub_signature_256:
+        if settings.ENVIRONMENT.lower() not in {"development", "test"}:
+            raise HTTPException(status_code=401, detail="Missing webhook signature")
+    elif not verify_whatsapp_signature(raw_body, x_hub_signature_256):
+        logger.warning("WhatsApp HMAC-SHA256 signature mismatch.")
+        raise HTTPException(status_code=401, detail="Invalid HMAC-SHA256 webhook signature")
 
     # 1. Check for Meta Cloud API JSON payload
     if "application/json" in content_type:

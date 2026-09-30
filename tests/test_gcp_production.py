@@ -26,7 +26,7 @@ if str(ROOT / "backend") not in sys.path:
 
 from app.main import app
 from app.core.config import settings
-from app.core.security import device_hash, redact_pii
+from app.core.security import device_hash, redact_pii, verify_telegram_token, verify_whatsapp_signature
 from app.services.mcda_engine import compute_mcda_rankings, calculate_spearman_rho
 from app.services.vertex_gemini import analyze_infrastructure_damage, generate_cabinet_policy_brief
 
@@ -34,6 +34,12 @@ from app.services.vertex_gemini import analyze_infrastructure_damage, generate_c
 @pytest.fixture(scope="module")
 def client():
     return TestClient(app)
+
+
+def test_nonlocal_webhook_signatures_fail_closed(monkeypatch):
+    monkeypatch.setattr(settings, "ENVIRONMENT", "staging")
+    assert verify_whatsapp_signature(b"payload", None) is False
+    assert verify_telegram_token(None) is False
 
 
 def test_whatsapp_challenge_verification(client):
@@ -190,9 +196,18 @@ def test_mcda_dynamic_sensitivity():
     assert len(res["top_recommendations"]) > 0
 
 
-def test_cpgrams_dispatch_sync(client):
-    """Verifies DARPG CPGRAMS batch dispatch sync."""
+def test_cpgrams_requires_operator(client):
+    """Public viewers cannot trigger an external governance dispatch."""
     res = client.post("/integrations/cpgrams/sync?batch_size=5")
+    assert res.status_code == 401
+
+
+def test_cpgrams_dispatch_sync(client):
+    """Verifies DARPG CPGRAMS batch dispatch sync for an operator."""
+    res = client.post(
+        "/integrations/cpgrams/sync?batch_size=5",
+        headers={"Authorization": "Bearer dev-operator"},
+    )
     assert res.status_code == 200
     data = res.json()
     assert "batch_id" in data
@@ -202,6 +217,19 @@ def test_cpgrams_dispatch_sync(client):
     first_record = data["details"][0]
     assert first_record["registration_no"].startswith("DARPG/P/")
     assert first_record["sla_days"] in [15, 30]
+
+
+def test_auth_me_anonymous_is_viewer(client):
+    """Anonymous dashboard access is read-only viewer access."""
+    res = client.get("/auth/me")
+    assert res.status_code == 200
+    assert res.json() == {
+        "authenticated": False,
+        "sub": "anonymous",
+        "email": None,
+        "name": None,
+        "role": "viewer",
+    }
 
 
 def test_statutory_compliance_endpoints(client):

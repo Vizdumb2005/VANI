@@ -40,6 +40,9 @@ class CitizenRequestResponse(BaseModel):
     text_reply: Optional[str] = Field(None, description="Formatted WhatsApp/SMS text confirmation message")
     voice_reply: Optional[Dict[str, Any]] = Field(None, description="TTS voice note payload with audio_base64 and spoken script")
     persisted_at: str = Field(..., description="ISO 8601 timestamp of persistence")
+    operational_store: str = Field(default="firestore", description="Operational persistence backend")
+    event_published: bool = Field(default=False, description="Whether Pub/Sub acknowledged the event")
+    analytics_persisted: bool = Field(default=False, description="Whether BigQuery acknowledged the analytic projection")
 
 
 class WhatsAppWebhookChallenge(BaseModel):

@@ -5,99 +5,105 @@ import {
   ScmDistrictImpact,
   CabinetMemo,
   CpgramsBatch,
-  CitizenIntakeResponse
-} from '../types';
+  CitizenIntakeResponse,
+} from "../types";
 import {
   INITIAL_PRIORITIES,
   INITIAL_SIGNALS,
   INITIAL_IMPACT_REPORT,
-  INITIAL_CPGRAMS_BATCH
-} from '../data/initialData';
+  INITIAL_CPGRAMS_BATCH,
+} from "../data/initialData";
 
-const API_BASE = typeof window !== 'undefined' && window.location.origin
-  ? window.location.origin
-  : 'http://localhost:8000';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+
+type RequestOptions = RequestInit & { token?: string | null };
+
+async function requestJson<T>(path: string, options: RequestOptions = {}): Promise<T> {
+  const { token, headers, ...init } = options;
+  const response = await fetch(`${API_BASE}${path}`, {
+    ...init,
+    cache: "no-store",
+    headers: {
+      Accept: "application/json",
+      ...(init.body ? { "Content-Type": "application/json" } : {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...headers,
+    },
+  });
+  if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+  return (await response.json()) as T;
+}
 
 export async function fetchPriorities(): Promise<PriorityProject[]> {
   try {
-    const res = await fetch(`${API_BASE}/priorities`);
-    if (res.ok) {
-      const data = await res.json();
-      return Array.isArray(data) ? data : data.top_recommendations || INITIAL_PRIORITIES;
-    }
-  } catch (e) {
-    console.warn('API /priorities unavailable, serving local baseline:', e);
+    const data = await requestJson<PriorityProject[] | { top_recommendations: PriorityProject[] }>("/priorities");
+    return Array.isArray(data) ? data : data.top_recommendations || INITIAL_PRIORITIES;
+  } catch (error) {
+    console.warn("API /priorities unavailable, serving local baseline:", error);
+    return INITIAL_PRIORITIES;
   }
-  return INITIAL_PRIORITIES;
 }
 
 export async function fetchSignals(): Promise<DemandSignal[]> {
   try {
-    const res = await fetch(`${API_BASE}/signals`);
-    if (res.ok) {
-      const data = await res.json();
-      return Array.isArray(data) ? data : INITIAL_SIGNALS;
-    }
-  } catch (e) {
-    console.warn('API /signals unavailable, serving local baseline:', e);
+    const data = await requestJson<DemandSignal[]>("/signals");
+    return Array.isArray(data) ? data : INITIAL_SIGNALS;
+  } catch (error) {
+    console.warn("API /signals unavailable, serving local baseline:", error);
+    return INITIAL_SIGNALS;
   }
-  return INITIAL_SIGNALS;
 }
 
 export async function fetchImpactReport(): Promise<ScmImpactReport> {
   try {
-    const res = await fetch(`${API_BASE}/impact/Varanasi`);
-    if (res.ok) {
-      const data: ScmDistrictImpact = await res.json();
-      return {
-        method: 'Synthetic Control Method (Abadie et al.)',
-        panel_months: INITIAL_IMPACT_REPORT.panel_months,
-        districts: [data, ...INITIAL_IMPACT_REPORT.districts.filter(d => d.district.toLowerCase() !== 'varanasi')]
-      };
-    }
-  } catch (e) {
-    console.warn('API /impact unavailable, serving local baseline:', e);
+    const data = await requestJson<ScmDistrictImpact>("/impact/Varanasi");
+    return {
+      method: "Synthetic Control Method (Abadie et al.)",
+      panel_months: INITIAL_IMPACT_REPORT.panel_months,
+      districts: [data, ...INITIAL_IMPACT_REPORT.districts.filter((d) => d.district.toLowerCase() !== "varanasi")],
+    };
+  } catch (error) {
+    console.warn("API /impact unavailable, serving local baseline:", error);
+    return INITIAL_IMPACT_REPORT;
   }
-  return INITIAL_IMPACT_REPORT;
+}
+
+export async function fetchDistrictImpact(district: string): Promise<ScmDistrictImpact | null> {
+  try {
+    return await requestJson<ScmDistrictImpact>(`/impact/${encodeURIComponent(district)}`);
+  } catch (error) {
+    console.warn(`API /impact unavailable for ${district}, serving local baseline:`, error);
+    return INITIAL_IMPACT_REPORT.districts.find(
+      (item) => item.district.toLowerCase() === district.toLowerCase(),
+    ) || null;
+  }
 }
 
 export async function fetchCabinetMemo(rank: number): Promise<CabinetMemo> {
   try {
-    const res = await fetch(`${API_BASE}/priorities/${rank}/memo`);
-    if (res.ok) {
-      return await res.json();
-    }
-  } catch (e) {
-    console.warn('API /memo unavailable, serving structured memo template:', e);
+    return await requestJson<CabinetMemo>(`/priorities/${rank}/memo`);
+  } catch (error) {
+    console.warn("API /memo unavailable, serving structured memo template:", error);
   }
 
-  const p = INITIAL_PRIORITIES.find(x => x.rank === rank) || INITIAL_PRIORITIES[0];
+  const p = INITIAL_PRIORITIES.find((x) => x.rank === rank) || INITIAL_PRIORITIES[0];
   return {
     memo_title: `Cabinet Policy Brief: Priority Infrastructure Sanction (${p.location} - Rank #${p.rank})`,
-    executive_summary: `VAANI sovereign intelligence has surfaced a verified statistical demand hotspot in ${p.location} (${p.category.replace('_', ' ')}). Cross-referencing Census demographics and NFHS-5 reveals an underserved national corridor requiring immediate capital sanction.`,
+    executive_summary: `VAANI sovereign intelligence has surfaced a verified statistical demand hotspot in ${p.location} (${p.category.replace("_", " ")}). Cross-referencing Census demographics and NFHS-5 reveals an underserved national corridor requiring immediate capital sanction.`,
     urgency_justification: `Statistically validated citizen demand volume across local linguistic cohorts indicates high public utility necessity with an excess ratio of ${p.demand_intensity.excess_ratio}x.`,
     gatishakti_alignment: `Directly fulfills PM GatiShakti National Master Plan logistics corridor objectives and synchronizes with Union budget allocations for ${p.scheme_match.scheme}.`,
     recommended_sanction_inr_crores: 24.5,
-    projected_demand_decay_pct: 56.2
+    projected_demand_decay_pct: 56.2,
+    source: "local_baseline",
   };
 }
 
-export async function syncCpgramsBatch(batchSize: number = 10): Promise<CpgramsBatch> {
-  try {
-    const res = await fetch(`${API_BASE}/integrations/cpgrams/sync?batch_size=${batchSize}`, {
-      method: 'POST'
-    });
-    if (res.ok) {
-      return await res.json();
-    }
-  } catch (e) {
-    console.warn('API /integrations/cpgrams/sync unavailable:', e);
-  }
-  return {
-    ...INITIAL_CPGRAMS_BATCH,
-    batch_id: `NIC-DARPG-${Date.now().toString().slice(-6)}`,
-    status: 'BATCH_DISPATCH_SUCCESSFUL'
-  };
+export async function syncCpgramsBatch(batchSize = 10, token?: string | null): Promise<CpgramsBatch> {
+  if (!token) throw new Error("Operator sign-in is required before CPGRAMS dispatch");
+  return requestJson<CpgramsBatch>(`/integrations/cpgrams/sync?batch_size=${batchSize}`, {
+    method: "POST",
+    token,
+  });
 }
 
 export async function submitCitizenIntake(payload: {
@@ -108,15 +114,10 @@ export async function submitCitizenIntake(payload: {
   device_id: string;
   image_base64?: string;
 }): Promise<CitizenIntakeResponse> {
-  const res = await fetch(`${API_BASE}/requests`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
+  return requestJson<CitizenIntakeResponse>("/requests", {
+    method: "POST",
+    body: JSON.stringify(payload),
   });
-  if (!res.ok) {
-    throw new Error(`Citizen intake submission failed: ${res.statusText}`);
-  }
-  return await res.json();
 }
 
 export const submitRequest = submitCitizenIntake;

@@ -4,7 +4,12 @@ import React, { useState } from "react";
 import { syncCpgramsBatch } from "../../lib/api";
 import { Send, CheckCircle2, Clock, Landmark, ShieldCheck } from "lucide-react";
 
-export const CpgramsDispatchLedger: React.FC = () => {
+interface CpgramsDispatchLedgerProps {
+  canDispatch: boolean;
+  operatorToken: string | null;
+}
+
+export const CpgramsDispatchLedger: React.FC<CpgramsDispatchLedgerProps> = ({ canDispatch, operatorToken }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [receipt, setReceipt] = useState<any>(null);
 
@@ -17,9 +22,10 @@ export const CpgramsDispatchLedger: React.FC = () => {
   ];
 
   const handleSync = async () => {
+    if (!canDispatch || !operatorToken) return;
     setLoading(true);
     try {
-      const data = await syncCpgramsBatch(5);
+      const data = await syncCpgramsBatch(5, operatorToken);
       setReceipt(data);
     } catch (e) {
       console.error(e);
@@ -43,14 +49,20 @@ export const CpgramsDispatchLedger: React.FC = () => {
           </p>
         </div>
 
-        <button
-          onClick={handleSync}
-          disabled={loading}
-          className="px-4 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-[#070B14] font-bold text-xs font-mono flex items-center gap-1.5 transition-all shadow-md"
-        >
-          <Send className="w-3.5 h-3.5" />
-          <span>{loading ? "Dispatching..." : "Push Batch to DARPG NIC"}</span>
-        </button>
+        {canDispatch ? (
+          <button
+            onClick={handleSync}
+            disabled={loading}
+            className="px-4 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-[#070B14] font-bold text-xs font-mono flex items-center gap-1.5 transition-all shadow-md"
+          >
+            <Send className="w-3.5 h-3.5" />
+            <span>{loading ? "Dispatching..." : "Push Batch to DARPG NIC"}</span>
+          </button>
+        ) : (
+          <span className="rounded border border-white/10 px-3 py-1.5 text-[11px] font-mono text-mutedText">
+            Read-only viewer ledger
+          </span>
+        )}
       </div>
 
       {/* Dispatch Ledger Table */}

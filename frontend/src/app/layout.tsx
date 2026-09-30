@@ -5,6 +5,11 @@ export const metadata: Metadata = {
   title: "VAANI - Sovereign Operations Command Dashboard",
   description:
     "Voice-to-Network Aggregated National Intelligence - Operational DPI Platform",
+  icons: {
+    icon: "/vaani-icon.svg",
+    shortcut: "/vaani-icon.svg",
+    apple: "/vaani-icon.svg",
+  },
 };
 
 export default function RootLayout({
@@ -15,6 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="icon" href="/vaani-icon.svg" type="image/svg+xml" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link

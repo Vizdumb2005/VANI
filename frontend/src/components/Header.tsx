@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
+import { GoogleSignInButton } from '../auth';
 import { ActiveView } from '../types';
+import { VaaniLogo } from './VaaniLogo';
 
 interface HeaderProps {
   activeView: ActiveView;
   onSelectView: (view: ActiveView) => void;
   onOpenDossier: () => void;
   onSyncCpgrams: () => void;
+  isOperator: boolean;
+  userEmail: string | null;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -13,29 +17,31 @@ export const Header: React.FC<HeaderProps> = ({
   onSelectView,
   onOpenDossier,
   onSyncCpgrams,
+  isOperator,
+  userEmail,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems: { key: ActiveView; label: string; description: string }[] = [
-    { key: 'dashboard', label: 'Operations Command Dashboard', description: 'GIS Map, MCDA Matrix, Live Gateways & CPGRAMS' },
-    { key: 'scm', label: 'Synthetic Control Impact Engine', description: 'Abadie causal counterfactual trajectories & placebos' },
-    { key: 'gateways', label: 'Omnichannel Ingestion Gateways', description: 'Meta WhatsApp v21.0, Twilio IVR & Cloud Pub/Sub' },
-    { key: 'brics', label: 'BRICS Cross-Border Settings', description: 'India LGD, Brazil IBGE, South Africa MDB' },
-    { key: 'compliance', label: 'Statutory Compliance & DPO', description: 'DPDP Act, audit certificates, and OpenAPI spec' },
+    { key: 'gis', label: 'GIS Command Map', description: 'Geospatial hotspots & LGD registry' },
+    { key: 'mcda', label: 'MCDA Prioritization Matrix', description: 'Sensitivity vectors & project rankings' },
+    { key: 'gateways', label: 'Omnichannel Ingestion', description: 'WhatsApp, Twilio, RapidPro & Pub/Sub telemetry' },
+    { key: 'cpgrams', label: 'CPGRAMS Dispatch Ledger', description: 'Institutional grievance routing & OpenAPI' },
+    { key: 'scm', label: 'Causal Impact Engine', description: 'Synthetic control counterfactuals & placebos' },
+    { key: 'brics', label: 'BRICS Scalability Framework', description: 'India LGD, Brazil IBGE, South Africa MDB' },
+    { key: 'compliance', label: 'Statutory Compliance & DPO', description: 'DPDP Act 2023, audit certificates, and DPO' },
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-surface border-b border-border px-6 md:px-12 py-3.5 transition-all">
+    <header className="sticky top-0 z-40 bg-surface border-b border-border px-6 md:px-12 py-3 transition-all">
       <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-        {/* Brand identity without academic version fluff */}
+        {/* Brand identity with bespoke minimalist logo */}
         <div className="flex items-center gap-4">
           <button
             onClick={() => onSelectView('dashboard')}
-            className="flex items-center gap-3 text-left focus:outline-none"
+            className="flex items-center gap-3 text-left focus:outline-none group"
           >
-            <div className="w-8 h-8 rounded bg-charcoal text-white flex items-center justify-center font-serif font-bold text-base shadow-subtle">
-              V
-            </div>
+            <VaaniLogo className="w-8 h-8 rounded-lg shadow-subtle shrink-0 group-hover:opacity-90 transition-opacity" />
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-lg font-serif tracking-tight text-charcoal font-semibold">
@@ -50,24 +56,29 @@ export const Header: React.FC<HeaderProps> = ({
               </p>
             </div>
           </button>
-
-          {/* Operational live status indicator */}
-          <div className="hidden lg:flex items-center gap-2 px-2.5 py-1 rounded border border-border bg-surface-subtle text-xs font-mono text-secondary">
-            <span className="w-2 h-2 rounded-full bg-pastel-green-text animate-pulse"></span>
-            <span>Network: Operational</span>
-            <span className="text-secondary/50">·</span>
-            <span>Cloud Run (asia-south1)</span>
-          </div>
         </div>
 
-        {/* Action Controls & 3-Line Hamburger Menu */}
-        <div className="flex items-center gap-3">
-          <button
-            onClick={onSyncCpgrams}
-            className="hidden sm:inline-flex items-center px-3.5 py-1.5 text-xs font-mono font-medium rounded border border-border bg-surface hover:bg-surface-subtle text-charcoal transition-colors"
-          >
-            Sync CPGRAMS
-          </button>
+        {/* Action Controls, Repositioned Compact Network Bar & Hamburger Menu */}
+        <div className="flex items-center gap-2.5">
+          {/* Compact Network Status Badge moved to marked right area */}
+          <div className="hidden lg:flex items-center gap-1.5 px-2 py-1 rounded border border-border bg-surface-subtle text-[11px] font-mono text-secondary">
+            <span className="w-1.5 h-1.5 rounded-full bg-pastel-green-text animate-pulse"></span>
+            <span>Network: Operational</span>
+            <span className="text-secondary/40">·</span>
+            <span>asia-south1</span>
+          </div>
+
+          <GoogleSignInButton />
+
+          {isOperator && (
+            <button
+              onClick={onSyncCpgrams}
+              title={userEmail ? `Dispatch as ${userEmail}` : 'Dispatch CPGRAMS'}
+              className="hidden sm:inline-flex items-center px-3.5 py-1.5 text-xs font-mono font-medium rounded border border-border bg-surface hover:bg-surface-subtle text-charcoal transition-colors"
+            >
+              Sync CPGRAMS
+            </button>
+          )}
 
           <button
             onClick={onOpenDossier}
