@@ -34,6 +34,8 @@ default:
     - pip install -r backend/requirements.txt
   variables:
     PYTHONPATH: "${CI_PROJECT_DIR}:${CI_PROJECT_DIR}/backend:${CI_PROJECT_DIR}/workflow"
+    ALLOWED_HOSTS: "localhost,127.0.0.1,testserver"
+    CORS_ORIGINS: "http://localhost:3000,http://localhost:8000"
 
 backend:quality:
   extends: .python-job

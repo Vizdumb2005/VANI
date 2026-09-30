@@ -1,11 +1,11 @@
 # Gitleaks configuration for VAANI Digital Public Good
-# Allows mock test tokens, documentation examples, and sanitized sample configurations
+# Allows mock values used exclusively by tests, examples, and local development.
 
 [extend]
 useDefault = true
 
 [allowlist]
-description = "Global allowlist for documentation examples, test fixtures, and mock tokens"
+description = "Allow explicitly non-secret fixtures and documentation examples"
 paths = [
   '''docs/.*''',
   '''tests/.*''',
@@ -22,10 +22,21 @@ stopwords = [
   "invalid_secret",
   "test_token",
   "demo_test",
+  "dummy_rapidpro_token",
+  "rapidpro_secure_password_replace_in_prod",
+  "replace_this_with_a_secure_random_key_in_production",
+  "local-development-only-hmac-salt",
+  "local-development-only-whatsapp-secret",
+  "local-development-only-whatsapp-token",
+  "local-development-only-telegram-secret",
 ]
 regexes = [
   '''your_secure_api_token''',
   '''dev-operator''',
   '''wrong_token''',
   '''invalid_secret''',
+  '''dummy_rapidpro_token''',
+  '''rapidpro_secure_password_replace_in_prod''',
+  '''replace_this_with_a_secure_random_key_in_production''',
+  '''local-development-only-(hmac-salt|whatsapp-secret|whatsapp-token|telegram-secret)''',
 ]
